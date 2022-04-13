@@ -8,8 +8,6 @@ import {CoreModule} from "./core/core.module";
 import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
 import {initializer, InjectorHolder} from "./app-init";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {environment} from "../environments/environment";
-import {APP_BASE_HREF} from "@angular/common";
 import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
@@ -31,8 +29,7 @@ import {HttpClientModule} from "@angular/common/http";
       useFactory: initializer,
       multi: true,
       deps: [KeycloakService]
-    },
-    {provide: APP_BASE_HREF, useValue: environment.baseHref}
+    }
   ],
   bootstrap: [AppComponent]
 })

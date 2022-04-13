@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.helict</groupId>
-    <artifactId>modeler</artifactId>
+    <artifactId>modeler-frontend</artifactId>
 
-    <name>modeler</name>
+    <name>modeler-frontend</name>
     <version>1.0.0</version>
 
     <packaging>pom</packaging>
