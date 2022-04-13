@@ -25,6 +25,11 @@
   @include mat.all-component-typographies($default-typography);
 }
 
+.ipaac-theme {
+  @include mat.all-component-themes($ipaac-theme);
+  @include mat.all-component-typographies($ipaac-typography);
+}
+
 html,
 body {
   // Set global box sizing

@@ -1,0 +1,103 @@
+@use '~@angular/material' as mat;
+@import url("https://fonts.googleapis.com/css?family=Roboto+Condensed");
+@import "../mixins";
+
+$_primary-color: #daae3d;
+$_primary-color-light: #daae3d;
+$_primary-color-dark: #daae3d;
+$_primary-color-text: #000;
+
+$_secondary-color: #264485;
+$_secondary-color-light: #266785;
+$_secondary-color-dark: #13265d;
+$_secondary-color-text: #fff;
+
+$_primary-palette: (
+  50:   $_primary-color-light,
+  100:  $_primary-color-light,
+  200:  lighten($_primary-color, 30%),
+  300:  lighten($_primary-color, 20%),
+  400:  lighten($_primary-color, 10%),
+  500:  $_primary-color,
+  600:  darken($_primary-color, 10%),
+  700:  darken($_primary-color, 20%),
+  800:  darken($_primary-color, 30%),
+  900:  $_primary-color-dark,
+  A100: $_primary-color-light,
+  A200: lighten($_primary-color, 30%),
+  A400: lighten($_primary-color, 20%),
+  A700: darken($_primary-color, 20%),
+  contrast: (
+    50:   opacify(black, .57),
+    100:  opacify(black, .57),
+    200:  opacify(black, .57),
+    300:  opacify(black, .57),
+    400:  opacify(black, .57),
+    500:  $_primary-color-text,
+    600:  opacify(white, .63),
+    700:  opacify(white, .96),
+    800:  opacify(white, .96),
+    900:  opacify(white, .96),
+    A100: opacify(black, .57),
+    A200: opacify(black, .57),
+    A400: opacify(black, .57),
+    A700: opacify(white, .96)
+  )
+);
+
+$_secondary-palette: (
+  50:   $_secondary-color-light,
+  100:  $_secondary-color-light,
+  200:  lighten($_secondary-color, 30%),
+  300:  lighten($_secondary-color, 20%),
+  400:  lighten($_secondary-color, 10%),
+  500:  $_secondary-color,
+  600:  darken($_secondary-color, 10%),
+  700:  darken($_secondary-color, 20%),
+  800:  darken($_secondary-color, 30%),
+  900:  $_secondary-color-dark,
+  A100: $_secondary-color-light,
+  A200: lighten($_secondary-color, 30%),
+  A400: lighten($_secondary-color, 20%),
+  A700: darken($_secondary-color, 20%),
+  contrast: (
+    50:   opacify(white, .64),
+    100:  opacify(white, .64),
+    200:  opacify(white, .64),
+    300:  opacify(white, .64),
+    400:  opacify(white, .64),
+    500:  $_secondary-color-text,
+    600:  opacify(white, .46),
+    700:  opacify(white, .46),
+    800:  opacify(white, .46),
+    900:  opacify(white, .46),
+    A100: opacify(white, .64),
+    A200: opacify(white, .64),
+    A400: opacify(white, .64),
+    A700: opacify(white, .46)
+  )
+);
+
+@function get-ipaac-typography-config() {
+  @return mat.define-typography-config($font-family: '"Roboto Condensed", sans-serif');
+}
+
+@function get-ipaac-primary-palette() {
+  @return mat.define-palette($_primary-palette, 500, 100, 900);
+}
+
+@function get-ipaac-accent-palette() {
+  @return mat.define-palette($_secondary-palette, 500, 100, 900);
+}
+
+@function get-ipaac-warn-palette() {
+  @return mat.define-palette(mat.$red-palette);
+}
+
+@function get-ipaac-theme() {
+  @return mat.define-light-theme(
+    get-ipaac-primary-palette(),
+    get-ipaac-accent-palette(),
+    get-ipaac-warn-palette()
+  );
+}

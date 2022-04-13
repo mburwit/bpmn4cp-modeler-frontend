@@ -1,4 +1,5 @@
 @import "default-theme";
+@import "ipaac-theme";
 
 $default-theme: get-default-theme();
 
@@ -7,3 +8,9 @@ $default-typography: get-default-typography-config();
 $default-primary-palette: get-default-primary-palette();
 $default-accent-palette: get-default-accent-palette();
 $default-warn-palette: get-default-warn-palette();
+
+$ipaac-theme: get-ipaac-theme();
+$ipaac-typography: get-ipaac-typography-config();
+$ipaac-primary-palette: get-ipaac-primary-palette();
+$ipaac-accent-palette: get-ipaac-accent-palette();
+$ipaac-warn-palette: get-ipaac-warn-palette();
