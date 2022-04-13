@@ -2,13 +2,13 @@
 @import "assets/scss/theme/theming";
 
 // Fore- and background color palettes
-$foreground-palette: map-get($custom-theme, foreground);
-$background-palette: map-get($custom-theme, background);
+$foreground-palette: map-get($default-theme, foreground);
+$background-palette: map-get($default-theme, background);
 
 // Colors of the theme
-$primary-color: mat.get-color-from-palette($custom-primary-palette);
-$accent-color: mat.get-color-from-palette($custom-accent-palette);
-$warn-color: mat.get-color-from-palette($custom-warn-palette);
+$primary-color: mat.get-color-from-palette($default-primary-palette);
+$accent-color: mat.get-color-from-palette($default-accent-palette);
+$warn-color: mat.get-color-from-palette($default-warn-palette);
 
 // Color variables
 $text-color: map-get($foreground-palette, text);

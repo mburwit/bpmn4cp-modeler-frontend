@@ -21,8 +21,8 @@
 @import '~@whoicd/icd11ect/style.css';
 
 .custom-theme {
-  @include mat.all-component-themes($custom-theme);
-  @include mat.all-component-typographies($custom-typography);
+  @include mat.all-component-themes($default-theme);
+  @include mat.all-component-typographies($default-typography);
 }
 
 html,
@@ -36,7 +36,7 @@ body {
 
 .hint,
 label {
-  @include mat.typography-level($custom-typography, body-1);
+  @include mat.typography-level($default-typography, body-1);
 }
 
 .hint {
