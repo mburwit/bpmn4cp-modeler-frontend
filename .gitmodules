@@ -1,0 +1,3 @@
+[submodule "lib/bpmn4cp"]
+	path = lib/bpmn4cp
+	url = https://github.com/mburwit/bpmn4cp.git
