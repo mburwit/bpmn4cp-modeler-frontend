@@ -1,0 +1,8 @@
+<app-progress-spinner color="accent" mode="indeterminate" [backdropEnabled]="true" [positionGloballyCenter]="true">
+</app-progress-spinner>
+<div class="modeler-screen">
+  <app-modeler-canvas #canvas class="modeler-canvas" (canvasEvents)="handleCanvasEvent($event)"></app-modeler-canvas>
+  <app-modeler-toolbar #toolbar class="modeler-toolbar"
+                       [templateTitle]="templateTitle.asObservable()"
+                       (toolbarEvents)="handleToolbarEvent($event)"></app-modeler-toolbar>
+</div>

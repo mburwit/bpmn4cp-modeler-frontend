@@ -1,0 +1,31 @@
+<mat-card fxLayout="column">
+  <a #imageLink mat-card-image appEnterTheViewportNotifier (visibilityChange)="onVisibilityChange($event)" fxLayout="row" fxLayoutAlign="center center" class="no-bottom-margin pointer" (click)="modelItem()">
+    <div *ngIf="loading" fxFlex="fill"></div>
+    <mat-progress-spinner *ngIf="loading" fxFlex="noshrink" color="accent" mode="indeterminate"></mat-progress-spinner>
+    <div *ngIf="loading" fxFlex="fill"></div>
+    <img *ngIf="png" style="max-height: 100%; max-width: 100%" [src]="png" alt="Thumbnail of {{item.title}}" />
+  </a>
+  <mat-card-actions fxLayout="row" fxLayoutAlign="end center" class="no-padding">
+    <button mat-icon-button (click)="trashItem()" matTooltip="Delete Template" matTooltipPosition="above">
+      <fa-icon aria-hidden="true" [icon]="iconTrash" [fixedWidth]="true" size="lg"></fa-icon>
+    </button>
+    <button mat-icon-button (click)="editItem()" matTooltip="Edit Metadata" matTooltipPosition="above">
+      <fa-icon aria-hidden="true" [icon]="iconEditMeta" [fixedWidth]="true" size="lg"></fa-icon>
+    </button>
+    <button mat-icon-button (click)="modelItem()" matTooltip="Open Model" matTooltipPosition="above">
+      <fa-icon aria-hidden="true" [icon]="iconModel" [fixedWidth]="true" size="lg"></fa-icon>
+    </button>
+  </mat-card-actions>
+
+  <mat-card-title class="md-card-title">{{item.title}}</mat-card-title>
+  <mat-card-subtitle>{{getSubtitle()}}</mat-card-subtitle>
+
+  <mat-card-content>
+    <div class="card-text-content">
+      {{item.description}}
+    </div>
+  </mat-card-content>
+
+  <div fxFlex="1 1 auto"></div>
+
+</mat-card>

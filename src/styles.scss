@@ -1,0 +1,155 @@
+// Import Angular Material functions (theme customization)
+@use '~@angular/material' as mat;
+
+// Include Angular Material core mixin (theme customization)
+@include mat.core();
+@import "assets/scss/theme/theming";
+
+// Import global variables
+@import "variables";
+
+// Import custom mixins
+@import "assets/scss/mixins";
+
+// Import W3.CSS lib
+@import "~w3-css/w3.css";
+
+@import "~bpmn4cp/dist/assets/vendor/bpmn-js/diagram-js.css";
+@import "~bpmn4cp/dist/assets/font/css/bpmn.css";
+
+// Import ICD Embedded Coding Tool Styles
+@import '~@whoicd/icd11ect/style.css';
+
+.custom-theme {
+  @include mat.all-component-themes($custom-theme);
+  @include mat.all-component-typographies($custom-typography);
+}
+
+html,
+body {
+  // Set global box sizing
+  @include box-sizing("border-box");
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.hint,
+label {
+  @include mat.typography-level($custom-typography, body-1);
+}
+
+.hint {
+  color: $text-color-secondary;
+}
+
+.actions {
+  button {
+    text-transform: uppercase;
+  }
+}
+
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+a.disabled span,
+a.disabled .ng-fa-icon,
+.disabled div,
+.disabled .mat-pseudo-checkbox {
+  color: $text-color-disabled;
+}
+
+.avatar {
+  + span {
+    margin-left: 1em;
+  }
+
+  &,
+  + span {
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+
+.ng-fa-icon,
+.app-flag-icon {
+  &,
+  + span {
+    display: inline-block;
+  }
+
+  & + span {
+    margin-left: .5em;
+  }
+}
+
+img.avatar {
+  $height: 2.5em;
+  @include border-radius(50%);
+  max-height: $height;
+  padding: ($height * .1);
+}
+
+.mat-snack-bar-container.info {
+  background-color: $accent-color !important;
+}
+
+.mat-snack-bar-container.error {
+  background-color: $warn-color !important;
+}
+
+ul.bpp-properties-tabs-links > li.bpp-active a {
+  border-top: 2px solid $_primary-color !important;
+}
+
+.bpp-properties-group:hover > .group-toggle:hover {
+  background-color: $_primary-color !important;
+}
+
+.bpp-properties-panel {
+  background-color: #fafafa !important;
+  border-left: 1px solid $_primary-color-dark !important;
+  border-bottom: 1px solid $_primary-color-dark !important;
+}
+
+.bpp-properties-panel button:hover {
+  color: $_primary-color !important;
+}
+
+.bpp-properties-group.group-closed {
+  max-height: 25px !important;
+  background-color: unset !important;
+}
+
+.bpp-properties-group.group-closed:hover > .group-label {
+  color: $_primary-color !important;
+}
+
+.bpp-properties-panel input:focus,
+.bpp-properties-panel button:focus,
+.bpp-properties-panel textarea:focus,
+.bpp-properties-panel [contenteditable]:focus {
+  border-color: $_primary-color-dark !important;
+  box-shadow: 0 0 1px 2px $_primary-color-light !important;
+}
+
+.bpp-entry-link {
+  color: $_primary-color !important;
+}
+
+.bpp-field-description a {
+  color: $_primary-color-dark !important;
+}
+
+.bpp-field-description a:hover {
+  color: $_primary-color !important;
+}
+
+.mat-slider-thumb-label {
+  right: -24px !important;
+  top: -60px !important;
+  width: 48px !important;
+  height: 48px !important;
+}

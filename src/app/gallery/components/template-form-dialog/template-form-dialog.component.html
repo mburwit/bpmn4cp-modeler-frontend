@@ -1,0 +1,109 @@
+<div style="min-width: 400px">
+  <form [formGroup]="templateForm">
+    <mat-card-header>
+      <mat-card-title>{{formTitle()}}</mat-card-title>
+    </mat-card-header>
+
+    <!-- Actual content starts from here -->
+    <mat-card-content fxLayout="column" fxLayoutGap="15px" fxLayoutAlign="flex-start">
+      <div fxFlex="100%">
+        <mat-form-field class="fullWidht">
+          <mat-label>Title</mat-label>
+          <input formControlName="title" matInput placeholder="Title">
+        </mat-form-field>
+        <mat-error>
+        <span
+          *ngIf="!templateForm.get('title').valid && templateForm.get('title').touched">Please enter Title !!!</span>
+        </mat-error>
+      </div>
+      <div fxFlex="100%">
+        <mat-form-field class="fullWidht">
+          <mat-label>Description</mat-label>
+          <input formControlName="description" matInput placeholder="Natural language description of the plan">
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
+      </div>
+      <div fxFlex="100%">
+        <mat-form-field class="fullWidht">
+          <mat-label>Clinical Usage</mat-label>
+          <textarea formControlName="usage" matInput placeholder="Describes the clinical usage of the plan"></textarea>
+        </mat-form-field>
+        <mat-error>
+        </mat-error>
+      </div>
+      <div fxFlex="100%">
+        <mat-form-field class="fullWidht">
+          <mat-chip-list #topicList aria-label="Topic selection">
+            <mat-chip
+              *ngFor="let topic of topics"
+              [selectable]="true"
+              [removable]="true"
+              (removed)="removeTopic(topic)">
+              {{topic.text}}
+              <fa-icon matChipRemove [icon]="iconCancel"></fa-icon>
+            </mat-chip>
+            <input
+              placeholder="Topics"
+              #topicInput
+              [formControl]="topicCtrl"
+              [matAutocomplete]="auto"
+              [matChipInputFor]="topicList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="addTopic($event)"/>
+          </mat-chip-list>
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTopic($event)">
+            <mat-option *ngFor="let topic of filteredTopics | async" [value]="topic">
+              {{topic.text}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div fxFlex="100%">
+        <mat-form-field class="fullWidht">
+          <mat-chip-list #icdList aria-label="ICD selection">
+            <mat-chip
+              *ngFor="let icdItem of icdItems"
+              [selectable]="false"
+              [removable]="true"
+              (removed)="removeIcdItem(icdItem)">
+              {{icdItem.code}} - {{icdItem.title}}
+              <fa-icon matChipRemove [icon]="iconCancel"></fa-icon>
+            </mat-chip>
+            <input
+              placeholder="ICD Codes"
+              [matChipInputFor]="icdList"
+              disabled/>
+          </mat-chip-list>
+          <mat-icon matSuffix>
+            <button mat-icon-button aria-label="Open ICD browser" color="primary" (click)="openICDBrowser()">
+              <fa-icon [fixedWidth]="true" [icon]="iconAdd"></fa-icon>
+            </button>
+          </mat-icon>
+        </mat-form-field>
+      </div>
+      <div fxLayout="row">
+        <div fxFlex="50%">
+          <mat-form-field>
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status" placeholder="Status">
+              <mat-option *ngFor="let option of publicationStatus" [value]="option">{{option}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxFlex="50%">
+          <mat-slide-toggle formControlName="isSubTemplate">
+            <mat-label>Sub-Level template only</mat-label>
+          </mat-slide-toggle>
+        </div>
+      </div>
+
+    </mat-card-content>
+
+    <mat-card-actions fxLayout="row" fxLayoutAlign="end center">
+      <button mat-button [mat-dialog-close]>Cancel</button>
+      <button mat-button [mat-dialog-close]="getFormValue()" [disabled]="!templateForm.valid">Submit</button>
+    </mat-card-actions>
+  </form>
+</div>

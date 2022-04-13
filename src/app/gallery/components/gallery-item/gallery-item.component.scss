@@ -1,0 +1,49 @@
+mat-card {
+  max-width: 374px;
+  height: 510px;
+}
+
+mat-card-header > fa-icon {
+  line-height: 50px;
+  font-size: 16px;
+}
+
+.mat-card-image {
+  max-width: 344px;
+  height: 194px;
+  background-color: #b5cc02;
+}
+
+.no-bottom-margin {
+  margin-bottom: 0 !important;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.no-padding {
+  padding: 0 !important;
+}
+
+.mat-card-image > svg {
+  width: 100%;
+  height: 100%;
+}
+
+// small screen
+@media screen and (max-width: 600px) {
+  mat-card {
+    height: auto;
+  }
+
+  .mat-card-image {
+    height: auto;
+    max-height: 194px;
+  }
+
+  .mat-card-image > svg {
+    height: auto;
+    max-height: 194px;
+  }
+}

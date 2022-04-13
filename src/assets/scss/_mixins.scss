@@ -1,0 +1,39 @@
+@mixin box-sizing($sizing) {
+  box-sizing: $sizing;
+  -webkit-box-sizing: $sizing;
+  -moz-box-sizing: $sizing;
+}
+
+@mixin flex($flex) {
+  flex: $flex;
+  -webkit-flex: $flex;
+  -ms-flex: $flex;
+}
+
+@mixin border-radius($radius) {
+  border-radius: $radius;
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+}
+
+@mixin background-image($file-name) {
+  $image-url: "/assets/img/#{$file-name}";
+  background-image: url($image-url);
+  -webkit-background-image: url($image-url);
+  -moz-background-image: url($image-url);
+  -o-background-image: url($image-url);
+}
+
+@mixin background-size($size) {
+  background-size: $size;
+  -webkit-background-size: $size;
+  -moz-background-size: $size;
+  -o-background-size: $size;
+}
+
+@mixin background-size($width, $height) {
+  background-size: $width $height;
+  -webkit-background-size: $width $height;
+  -moz-background-size: $width $height;
+  -o-background-size: $width $height;
+}

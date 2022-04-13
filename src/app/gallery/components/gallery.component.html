@@ -1,0 +1,37 @@
+<app-progress-spinner color="accent" mode="indeterminate" [backdropEnabled]="true" [positionGloballyCenter]="true">
+</app-progress-spinner>
+<div class="w3-row">
+  <h2 class="w3-left">Template Gallery</h2>
+  <div class="w3-right">
+    <div class="w3-padding-right w3-left">
+      <mat-form-field>
+        <mat-label>Search</mat-label>
+        <input matInput #searchTextField type="search" placeholder="Search" [formControl]="searchControl">
+        <button mat-button mat-icon-button matSuffix (click)="clearSearchField()" *ngIf="searchTerm">
+          <fa-icon [icon]="iconClear"></fa-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    <div class="w3-padding-left w3-right">
+      <mat-paginator #paginator
+                     [length]="numberOfSearchedTemplates"
+                     [pageSize]="pageSize"
+                     [pageIndex]="pageIndex"
+                     [pageSizeOptions]="pageSizeOptions"
+                     (page)="pageChange($event)">
+      </mat-paginator>
+    </div>
+  </div>
+</div>
+<mat-divider></mat-divider>
+<div class="gallery-container" fxLayout="row wrap" fxLayoutAlign="flex-start">
+  <div fxFlex="0 1 374px"
+       *ngFor="let galleryItem of templatesDisplayed" class="galleryItem">
+    <app-gallery-item [item]="galleryItem" (itemEvents)="handleItemEvent($event)"></app-gallery-item>
+  </div>
+</div>
+<div class="fab-container">
+  <button mat-fab class="fab-main" (click)="onFabMainClicked()">
+    <fa-icon aria-hidden="true" [icon]="iconPlus" [fixedWidth]="true" size="lg"></fa-icon>
+  </button>
+</div>

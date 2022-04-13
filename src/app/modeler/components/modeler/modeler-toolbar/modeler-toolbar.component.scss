@@ -1,0 +1,39 @@
+@import "src/variables";
+
+.modeler-toolbar {
+  position: fixed;
+  right: 172px;
+  bottom: 31px;
+  z-index: 100;
+  border-radius: 2px;
+  border: 1px solid $primary-color;
+
+  h3.title {
+    margin: unset;
+    padding: 5px 10px;
+    color: $primary-color;
+  }
+}
+
+.io-control-list.io-horizontal, .io-control-list.io-horizontal li {
+  display: inline-block;
+}
+.io-import {
+  margin-right: 10px;
+}
+.io-control-list {
+  list-style: none;
+  padding: 5px;
+  margin: 0 0 0 0;
+}
+
+.io-control {
+  background: #FFF;
+  padding: 5px;
+}
+
+ul {
+  padding-left: 30px;
+}
+
+

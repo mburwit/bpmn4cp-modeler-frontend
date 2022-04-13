@@ -1,0 +1,18 @@
+<mat-nav-list class="navigation-items">
+  <mat-list-item class="navigation-item">
+    <a mat-line (click)="gotoGallery()">
+      <fa-icon aria-hidden="true" mat-list-icon [icon]="icons['templateGallery']" [fixedWidth]="true"></fa-icon>
+      <span>Modeler</span>
+    </a>
+  </mat-list-item>
+  <mat-list-item *ngIf="authEnabled()" class="navigation-item">
+    <a mat-line (click)="logout()">
+      <fa-icon aria-hidden="true" mat-list-icon [icon]="icons['logout']" [fixedWidth]="true"></fa-icon>
+      <span>Logout</span>
+    </a>
+  </mat-list-item>
+</mat-nav-list>
+<mat-divider></mat-divider>
+<div class="w3-container w3-center mat-small">
+  v{{version}}
+</div>

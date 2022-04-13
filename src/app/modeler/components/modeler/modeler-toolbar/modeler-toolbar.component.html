@@ -1,0 +1,99 @@
+<div class="modeler-toolbar">
+  <ul class="io-import io-control io-control-list io-horizontal">
+    <li>
+      <h3 class="title" title="{{title}}">{{ title }}</h3>
+    </li>
+    <li>
+      <button mat-icon-button (click)="onGalleryClick()"
+              matTooltip="Back to Template Gallery"
+              matTooltipPosition="above"
+              aria-label="Button that navigates back to the template gallery.">
+        <fa-icon aria-hidden="true" [icon]="iconGallery" [fixedWidth]="true" size="lg"></fa-icon>
+      </button>
+    </li>
+
+    <li class="vr" style="margin-left: 2px"></li>
+    <li>
+      <button mat-icon-button (click)="undoClick()"
+              matTooltip="Undo"
+              matTooltipPosition="above"
+              aria-label="Undo previous action."
+              [disabled]="!canUndo">
+        <fa-icon aria-hidden="true" [icon]="iconUndo" [fixedWidth]="true" size="lg"></fa-icon>
+      </button>
+    </li>
+
+    <li class="vr" style="margin-left: 2px"></li>
+    <li>
+      <button mat-icon-button (click)="redoClick()"
+              matTooltip="Redo"
+              matTooltipPosition="above"
+              aria-label="Redo previous undone action."
+              [disabled]="!canRedo">
+        <fa-icon aria-hidden="true" [icon]="iconRedo" [fixedWidth]="true" size="lg"></fa-icon>
+      </button>
+    </li>
+
+    <li class="vr" style="margin-left: 2px"></li>
+
+    <li>
+      <button mat-icon-button (click)="fileInput.click()"
+              matTooltip="Load BPMNXML File"
+              matTooltipPosition="above"
+              aria-label="Button that opens a model from local file system.">
+        <fa-icon aria-hidden="true" [icon]="iconFileImport" [fixedWidth]="true" size="lg"></fa-icon>
+      </button>
+      <span
+        style="visibility: hidden; position: absolute; overflow: hidden; width: 0; height:0;border:none;margin:0; padding:0">
+        <input type="file" #fileInput ng2FileSelect [uploader]="uploader" (change)="onFileSelected($event)"/>
+      </span>
+    </li>
+
+    <li class="vr" style="margin-left: 2px"></li>
+
+    <li>
+    <button mat-icon-button [matMenuTriggerFor]="downloadMenu"
+            aria-label="Download Model"
+            matTooltip="Download Model"
+            matTooltipPosition="above">
+      <fa-icon aria-hidden="true" [icon]="iconFileDownload" [fixedWidth]="true" size="lg"></fa-icon>
+    </button>
+    <mat-menu #downloadMenu="matMenu">
+      <button mat-menu-item (click)="downloadBpmnXml()">
+        <fa-icon aria-hidden="true" [icon]="iconFileCode" [fixedWidth]="true" size="lg"></fa-icon>
+        <span>BPMNXML</span>
+      </button>
+      <button mat-menu-item (click)="downloadSvg()">
+        <fa-icon aria-hidden="true" [icon]="iconFileSvg" [fixedWidth]="true" size="lg"></fa-icon>
+        <span>SVG</span>
+      </button>
+      <button mat-menu-item (click)="downloadPng()">
+        <fa-icon aria-hidden="true" [icon]="iconFilePng" [fixedWidth]="true" size="lg"></fa-icon>
+        <span>PNG</span>
+      </button>
+      <button mat-menu-item (click)="downloadPdf()">
+        <fa-icon aria-hidden="true" [icon]="iconFilePdf" [fixedWidth]="true" size="lg"></fa-icon>
+        <span>PDF</span>
+      </button>
+    </mat-menu>
+    </li>
+    <li>
+      <button mat-icon-button (click)="zoomOut()"
+              matTooltip="Zoom out"
+              matTooltipPosition="above"
+              aria-label="Zoom out."
+              [disabled]="!canZoomOut">
+        <fa-icon aria-hidden="true" [icon]="iconZoomOut" [fixedWidth]="true" size="lg"></fa-icon>
+      </button>
+      <mat-slider #zoomSlider [min]="zoomConfig.min" [max]="zoomConfig.max" [step]="zoomConfig.step" thumbLabel
+                  [displayWith]="zoomSliderLabel" value="1" (input)="onZoomMoved($event)"></mat-slider>
+      <button mat-icon-button (click)="zoomIn()"
+              matTooltip="Zoom in"
+              matTooltipPosition="above"
+              aria-label="Zoom in."
+              [disabled]="!canZoomIn">
+        <fa-icon aria-hidden="true" [icon]="iconZoomIn" [fixedWidth]="true" size="lg"></fa-icon>
+      </button>
+    </li>
+  </ul>
+</div>

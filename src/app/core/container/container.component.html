@@ -1,0 +1,13 @@
+<div class="core-container" [class.is-mobile]="mobileQuery.matches">
+  <app-core-toolbar (toggledMenu)="toggleNavigation()" class="toolbar-container"></app-core-toolbar>
+
+  <mat-sidenav-container class="content-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+    <mat-sidenav [mode]="mobileQuery.matches ? 'over' : 'side'"
+                 [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+      <app-core-navigation></app-core-navigation>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <app-core-content></app-core-content>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

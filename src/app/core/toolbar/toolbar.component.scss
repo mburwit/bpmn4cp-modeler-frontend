@@ -1,0 +1,5 @@
+@import "../../../assets/scss/mixins";
+
+.flex-spacer {
+  @include flex(auto);
+}
