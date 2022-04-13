@@ -1,9 +1,9 @@
 @import "default-theme";
 
-$default-theme: get-custom-theme();
+$default-theme: get-default-theme();
 
-$default-typography: get-custom-typography-config();
+$default-typography: get-default-typography-config();
 
-$default-primary-palette: get-custom-primary-palette();
-$default-accent-palette: get-custom-accent-palette();
-$default-warn-palette: get-custom-warn-palette();
+$default-primary-palette: get-default-primary-palette();
+$default-accent-palette: get-default-accent-palette();
+$default-warn-palette: get-default-warn-palette();

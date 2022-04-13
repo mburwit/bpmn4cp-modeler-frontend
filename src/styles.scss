@@ -20,7 +20,7 @@
 // Import ICD Embedded Coding Tool Styles
 @import '~@whoicd/icd11ect/style.css';
 
-.custom-theme {
+.default-theme {
   @include mat.all-component-themes($default-theme);
   @include mat.all-component-typographies($default-typography);
 }

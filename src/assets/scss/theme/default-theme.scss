@@ -78,26 +78,26 @@ $_secondary-palette: (
   )
 );
 
-@function get-custom-typography-config() {
+@function get-default-typography-config() {
   @return mat.define-typography-config($font-family: '"Roboto Condensed", sans-serif');
 }
 
-@function get-custom-primary-palette() {
+@function get-default-primary-palette() {
   @return mat.define-palette($_primary-palette, 500, 100, 900);
 }
 
-@function get-custom-accent-palette() {
+@function get-default-accent-palette() {
   @return mat.define-palette($_secondary-palette, 500, 100, 900);
 }
 
-@function get-custom-warn-palette() {
+@function get-default-warn-palette() {
   @return mat.define-palette(mat.$red-palette);
 }
 
-@function get-custom-theme() {
+@function get-default-theme() {
   @return mat.define-light-theme(
-    get-custom-primary-palette(),
-    get-custom-accent-palette(),
-    get-custom-warn-palette()
+    get-default-primary-palette(),
+    get-default-accent-palette(),
+    get-default-warn-palette()
   );
 }
