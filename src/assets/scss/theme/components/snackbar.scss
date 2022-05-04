@@ -1,0 +1,20 @@
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+// BPMN Properties Panel
+@mixin theme($theme) {
+  // Get the color config from the theme.
+  $color-config: mat.get-color-config($theme);
+  $accent-palette: map.get($color-config, 'accent');
+  $warn-palette: map.get($color-config, 'warn');
+  $accent-color: mat.get-color-from-palette($accent-palette);
+  $warn-color: mat.get-color-from-palette($warn-palette);
+
+  .mat-snack-bar-container.info {
+    background-color: $accent-color;
+  }
+
+  .mat-snack-bar-container.error {
+    background-color: $warn-color;
+  }
+}

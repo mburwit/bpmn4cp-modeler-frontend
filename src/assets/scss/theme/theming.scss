@@ -1,7 +1,32 @@
+@use '~@angular/material' as mat;
+@use 'sass:map';
+@use 'components/bpmn-properties-panel' as bpmn-properties-panel;
+@use 'components/labels' as labels;
+@use 'components/snackbar' as snackbar;
+@use 'app/modeler/components/modeler/modeler-toolbar/modeler-toolbar.component-theme' as modeler-toolbar;
+@use 'app/gallery/components/gallery.component-theme' as gallery;
+@use 'app/gallery/components/gallery-item/gallery-item.component-theme' as gallery-item;
+@use 'app/modeler/components/modeler/modeler.component-theme' as modeler;
+
 @import "default-theme";
+@import "ipaac-theme";
+@import "vcare-theme";
 
 $default-theme: get-default-theme();
-$default-typography: get-default-typography-config();
-$default-primary-palette: get-default-primary-palette();
-$default-accent-palette: get-default-accent-palette();
-$default-warn-palette: get-default-warn-palette();
+$ipaac-theme: get-ipaac-theme();
+$vcare-theme: get-vcare-theme();
+
+// Include Angular Material core mixin (theme customization)
+@include mat.core();
+
+@mixin apply-theme($theme) {
+  @include mat.all-component-themes(map.get($theme, 'theme'));
+  @include mat.all-component-typographies(map.get($theme, 'theme'));
+  @include bpmn-properties-panel.theme(map.get($theme, 'theme'));
+  @include labels.theme(map.get($theme, 'theme'));
+  @include snackbar.theme(map.get($theme, 'theme'));
+  @include modeler-toolbar.theme(map.get($theme, 'theme'));
+  @include modeler.theme(map.get($theme, 'theme'), map.get($theme, 'background'));
+  @include gallery.theme(map.get($theme, 'theme'), map.get($theme, 'background'));
+  @include gallery-item.theme(map.get($theme, 'theme'));
+}

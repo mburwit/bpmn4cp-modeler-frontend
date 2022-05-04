@@ -1,17 +1,13 @@
-@import "src/variables";
-
 .modeler-toolbar {
   position: fixed;
   right: 172px;
   bottom: 31px;
   z-index: 100;
   border-radius: 2px;
-  border: 1px solid $primary-color;
 
   h3.title {
     margin: unset;
     padding: 5px 10px;
-    color: $primary-color;
   }
 }
 

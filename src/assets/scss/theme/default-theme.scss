@@ -1,81 +1,80 @@
 @use '~@angular/material' as mat;
 @import url("https://fonts.googleapis.com/css?family=Roboto+Condensed");
-@import "../mixins";
 
-$_primary-color: #b5cc02;
-$_primary-color-light: #ebff4f;
-$_primary-color-dark: #819b00;
-$_primary-color-text: #000;
+$_default_primary-color: #006666;
+$_default_primary-color-light: #00cccc;
+$_default_primary-color-dark: #003333;
+$_default_primary-color-text: #000;
 
-$_secondary-color: #004d5f;
-$_secondary-color-light: #3e798c;
-$_secondary-color-dark: #002535;
-$_secondary-color-text: #fff;
+$_default_secondary-color: #004d5f;
+$_default_secondary-color-light: #3e798c;
+$_default_secondary-color-dark: #002535;
+$_default_secondary-color-text: #fff;
 
-$_primary-palette: (
-  50:   $_primary-color-light,
-  100:  $_primary-color-light,
-  200:  lighten($_primary-color, 30%),
-  300:  lighten($_primary-color, 20%),
-  400:  lighten($_primary-color, 10%),
-  500:  $_primary-color,
-  600:  darken($_primary-color, 10%),
-  700:  darken($_primary-color, 20%),
-  800:  darken($_primary-color, 30%),
-  900:  $_primary-color-dark,
-  A100: $_primary-color-light,
-  A200: lighten($_primary-color, 30%),
-  A400: lighten($_primary-color, 20%),
-  A700: darken($_primary-color, 20%),
-  contrast: (
-    50:   opacify(black, .57),
-    100:  opacify(black, .57),
-    200:  opacify(black, .57),
-    300:  opacify(black, .57),
-    400:  opacify(black, .57),
-    500:  $_primary-color-text,
-    600:  opacify(white, .63),
-    700:  opacify(white, .96),
-    800:  opacify(white, .96),
-    900:  opacify(white, .96),
-    A100: opacify(black, .57),
-    A200: opacify(black, .57),
-    A400: opacify(black, .57),
-    A700: opacify(white, .96)
-  )
+$_default_primary-palette: (
+        50: $_default_primary-color-light,
+        100: $_default_primary-color-light,
+        200: lighten($_default_primary-color, 30%),
+        300: lighten($_default_primary-color, 20%),
+        400: lighten($_default_primary-color, 10%),
+        500: $_default_primary-color,
+        600: darken($_default_primary-color, 10%),
+        700: darken($_default_primary-color, 20%),
+        800: darken($_default_primary-color, 30%),
+        900: $_default_primary-color-dark,
+        A100: $_default_primary-color-light,
+        A200: lighten($_default_primary-color, 30%),
+        A400: lighten($_default_primary-color, 20%),
+        A700: darken($_default_primary-color, 20%),
+        contrast: (
+                50: opacify(black, .57),
+                100: opacify(black, .57),
+                200: opacify(black, .57),
+                300: opacify(black, .57),
+                400: opacify(black, .57),
+                500: $_default_primary-color-text,
+                600: opacify(white, .63),
+                700: opacify(white, .96),
+                800: opacify(white, .96),
+                900: opacify(white, .96),
+                A100: opacify(black, .57),
+                A200: opacify(black, .57),
+                A400: opacify(black, .57),
+                A700: opacify(white, .96)
+        )
 );
 
-$_secondary-palette: (
-  50:   $_secondary-color-light,
-  100:  $_secondary-color-light,
-  200:  lighten($_secondary-color, 30%),
-  300:  lighten($_secondary-color, 20%),
-  400:  lighten($_secondary-color, 10%),
-  500:  $_secondary-color,
-  600:  darken($_secondary-color, 10%),
-  700:  darken($_secondary-color, 20%),
-  800:  darken($_secondary-color, 30%),
-  900:  $_secondary-color-dark,
-  A100: $_secondary-color-light,
-  A200: lighten($_secondary-color, 30%),
-  A400: lighten($_secondary-color, 20%),
-  A700: darken($_secondary-color, 20%),
-  contrast: (
-    50:   opacify(white, .64),
-    100:  opacify(white, .64),
-    200:  opacify(white, .64),
-    300:  opacify(white, .64),
-    400:  opacify(white, .64),
-    500:  $_secondary-color-text,
-    600:  opacify(white, .46),
-    700:  opacify(white, .46),
-    800:  opacify(white, .46),
-    900:  opacify(white, .46),
-    A100: opacify(white, .64),
-    A200: opacify(white, .64),
-    A400: opacify(white, .64),
-    A700: opacify(white, .46)
-  )
+$_default_secondary-palette: (
+        50: $_default_secondary-color-light,
+        100: $_default_secondary-color-light,
+        200: lighten($_default_secondary-color, 30%),
+        300: lighten($_default_secondary-color, 20%),
+        400: lighten($_default_secondary-color, 10%),
+        500: $_default_secondary-color,
+        600: darken($_default_secondary-color, 10%),
+        700: darken($_default_secondary-color, 20%),
+        800: darken($_default_secondary-color, 30%),
+        900: $_default_secondary-color-dark,
+        A100: $_default_secondary-color-light,
+        A200: lighten($_default_secondary-color, 30%),
+        A400: lighten($_default_secondary-color, 20%),
+        A700: darken($_default_secondary-color, 20%),
+        contrast: (
+                50: opacify(white, .64),
+                100: opacify(white, .64),
+                200: opacify(white, .64),
+                300: opacify(white, .64),
+                400: opacify(white, .64),
+                500: $_default_secondary-color-text,
+                600: opacify(white, .46),
+                700: opacify(white, .46),
+                800: opacify(white, .46),
+                900: opacify(white, .46),
+                A100: opacify(white, .64),
+                A200: opacify(white, .64),
+                A400: opacify(white, .64),
+                A700: opacify(white, .46)
+        )
 );
 
 @function get-default-typography-config() {
@@ -83,21 +82,38 @@ $_secondary-palette: (
 }
 
 @function get-default-primary-palette() {
-  @return mat.define-palette($_primary-palette, 500, 100, 900);
+  @return mat.define-palette($_default_primary-palette, 500, 100, 900);
 }
 
 @function get-default-accent-palette() {
-  @return mat.define-palette($_secondary-palette, 500, 100, 900);
+  @return mat.define-palette($_default_secondary-palette, 500, 100, 900);
 }
 
 @function get-default-warn-palette() {
   @return mat.define-palette(mat.$red-palette);
 }
 
+@function get-default-gallery-background-image() {
+  @return url('/assets/default-logo.png');
+}
+
+@function get-default-modeler-background-image() {
+  @return url('/assets/default-logo.png');
+}
+
 @function get-default-theme() {
-  @return mat.define-light-theme(
-    get-default-primary-palette(),
-    get-default-accent-palette(),
-    get-default-warn-palette()
+  @return (
+          theme: mat.define-light-theme((
+                  color: (
+                          primary: get-default-primary-palette(),
+                          accent: get-default-accent-palette(),
+                          warn: get-default-warn-palette()
+                  ),
+                  typography: get-default-typography-config()
+          )),
+          background: (
+                  gallery: get-default-gallery-background-image(),
+                  modeler: get-default-modeler-background-image()
+          )
   );
 }

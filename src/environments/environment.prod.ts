@@ -9,7 +9,7 @@ const backend: BaseConfig = {
   host: windowEnv["repositoryHost"] || "localhost",
   port: parseInt(windowEnv["repositoryPort"], 10) as Port || 443,
   base: windowEnv["repositoryPath"] || "/",
-  path: "api"
+  path: "fhir"
 };
 
 const icdapi: BaseConfig = Object.assign(

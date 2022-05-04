@@ -1,0 +1,119 @@
+@use '~@angular/material' as mat;
+@import url("https://fonts.googleapis.com/css?family=Roboto+Condensed");
+
+$_ipaac_primary-color: #daae3d;
+$_ipaac_primary-color-light: #daae3d;
+$_ipaac_primary-color-dark: #daae3d;
+$_ipaac_primary-color-text: #000;
+
+$_ipaac_secondary-color: #264485;
+$_ipaac_secondary-color-light: #266785;
+$_ipaac_secondary-color-dark: #13265d;
+$_ipaac_secondary-color-text: #fff;
+
+$_ipaac_primary-palette: (
+        50: $_ipaac_primary-color-light,
+        100: $_ipaac_primary-color-light,
+        200: lighten($_ipaac_primary-color, 30%),
+        300: lighten($_ipaac_primary-color, 20%),
+        400: lighten($_ipaac_primary-color, 10%),
+        500: $_ipaac_primary-color,
+        600: darken($_ipaac_primary-color, 10%),
+        700: darken($_ipaac_primary-color, 20%),
+        800: darken($_ipaac_primary-color, 30%),
+        900: $_ipaac_primary-color-dark,
+        A100: $_ipaac_primary-color-light,
+        A200: lighten($_ipaac_primary-color, 30%),
+        A400: lighten($_ipaac_primary-color, 20%),
+        A700: darken($_ipaac_primary-color, 20%),
+        contrast: (
+                50: opacify(black, .57),
+                100: opacify(black, .57),
+                200: opacify(black, .57),
+                300: opacify(black, .57),
+                400: opacify(black, .57),
+                500: $_ipaac_primary-color-text,
+                600: opacify(white, .63),
+                700: opacify(white, .96),
+                800: opacify(white, .96),
+                900: opacify(white, .96),
+                A100: opacify(black, .57),
+                A200: opacify(black, .57),
+                A400: opacify(black, .57),
+                A700: opacify(white, .96)
+        )
+);
+
+$_ipaac_secondary-palette: (
+        50: $_ipaac_secondary-color-light,
+        100: $_ipaac_secondary-color-light,
+        200: lighten($_ipaac_secondary-color, 30%),
+        300: lighten($_ipaac_secondary-color, 20%),
+        400: lighten($_ipaac_secondary-color, 10%),
+        500: $_ipaac_secondary-color,
+        600: darken($_ipaac_secondary-color, 10%),
+        700: darken($_ipaac_secondary-color, 20%),
+        800: darken($_ipaac_secondary-color, 30%),
+        900: $_ipaac_secondary-color-dark,
+        A100: $_ipaac_secondary-color-light,
+        A200: lighten($_ipaac_secondary-color, 30%),
+        A400: lighten($_ipaac_secondary-color, 20%),
+        A700: darken($_ipaac_secondary-color, 20%),
+        contrast: (
+                50: opacify(white, .64),
+                100: opacify(white, .64),
+                200: opacify(white, .64),
+                300: opacify(white, .64),
+                400: opacify(white, .64),
+                500: $_ipaac_secondary-color-text,
+                600: opacify(white, .46),
+                700: opacify(white, .46),
+                800: opacify(white, .46),
+                900: opacify(white, .46),
+                A100: opacify(white, .64),
+                A200: opacify(white, .64),
+                A400: opacify(white, .64),
+                A700: opacify(white, .46)
+        )
+);
+
+@function get-ipaac-typography-config() {
+  @return mat.define-typography-config($font-family: '"Roboto Condensed", sans-serif');
+}
+
+@function get-ipaac-primary-palette() {
+  @return mat.define-palette($_ipaac_primary-palette, 500, 100, 900);
+}
+
+@function get-ipaac-accent-palette() {
+  @return mat.define-palette($_ipaac_secondary-palette, 500, 100, 900);
+}
+
+@function get-ipaac-warn-palette() {
+  @return mat.define-palette(mat.$red-palette);
+}
+
+@function get-ipaac-gallery-background-image() {
+  @return url('/assets/ipaac-logo-symbolic-yellow.png');
+}
+
+@function get-ipaac-modeler-background-image() {
+  @return url('/assets/ipaac-logo-symbolic-yellow.png');
+}
+
+@function get-ipaac-theme() {
+  @return (
+          theme: mat.define-light-theme((
+                  color: (
+                          primary: get-ipaac-primary-palette(),
+                          accent: get-ipaac-accent-palette(),
+                          warn: get-ipaac-warn-palette()
+                  ),
+                  typography: get-ipaac-typography-config()
+          )),
+          background: (
+                  gallery: get-ipaac-gallery-background-image(),
+                  modeler: get-ipaac-modeler-background-image()
+          )
+  );
+}

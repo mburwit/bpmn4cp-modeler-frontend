@@ -1,9 +1,3 @@
-@use 'sass:map';
-@use '~@angular/material' as mat;
-
-$color-config:    mat.get-color-config($theme);
-$primary-palette: map.get($color-config, 'primary');
-
 mat-card {
   max-width: 374px;
   height: 510px;
@@ -17,8 +11,6 @@ mat-card-header > fa-icon {
 .mat-card-image {
   max-width: 344px;
   height: 194px;
-  background-color: mat.get-color-from-palette($primary-palette, '500');
-
 }
 
 .no-bottom-margin {
