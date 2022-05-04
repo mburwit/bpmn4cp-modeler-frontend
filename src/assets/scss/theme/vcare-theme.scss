@@ -1,0 +1,119 @@
+@use '~@angular/material' as mat;
+@import url("https://fonts.googleapis.com/css?family=Roboto+Condensed");
+
+$_vcare_primary-color: #b5cc02;
+$_vcare_primary-color-light: #ebff4f;
+$_vcare_primary-color-dark: #819b00;
+$_vcare_primary-color-text: #000;
+
+$_vcare_secondary-color: #004d5f;
+$_vcare_secondary-color-light: #3e798c;
+$_vcare_secondary-color-dark: #002535;
+$_vcare_secondary-color-text: #fff;
+
+$_vcare_primary-palette: (
+        50: $_vcare_primary-color-light,
+        100: $_vcare_primary-color-light,
+        200: lighten($_vcare_primary-color, 30%),
+        300: lighten($_vcare_primary-color, 20%),
+        400: lighten($_vcare_primary-color, 10%),
+        500: $_vcare_primary-color,
+        600: darken($_vcare_primary-color, 10%),
+        700: darken($_vcare_primary-color, 20%),
+        800: darken($_vcare_primary-color, 30%),
+        900: $_vcare_primary-color-dark,
+        A100: $_vcare_primary-color-light,
+        A200: lighten($_vcare_primary-color, 30%),
+        A400: lighten($_vcare_primary-color, 20%),
+        A700: darken($_vcare_primary-color, 20%),
+        contrast: (
+                50: opacify(black, .57),
+                100: opacify(black, .57),
+                200: opacify(black, .57),
+                300: opacify(black, .57),
+                400: opacify(black, .57),
+                500: $_vcare_primary-color-text,
+                600: opacify(white, .63),
+                700: opacify(white, .96),
+                800: opacify(white, .96),
+                900: opacify(white, .96),
+                A100: opacify(black, .57),
+                A200: opacify(black, .57),
+                A400: opacify(black, .57),
+                A700: opacify(white, .96)
+        )
+);
+
+$_vcare_secondary-palette: (
+        50: $_vcare_secondary-color-light,
+        100: $_vcare_secondary-color-light,
+        200: lighten($_vcare_secondary-color, 30%),
+        300: lighten($_vcare_secondary-color, 20%),
+        400: lighten($_vcare_secondary-color, 10%),
+        500: $_vcare_secondary-color,
+        600: darken($_vcare_secondary-color, 10%),
+        700: darken($_vcare_secondary-color, 20%),
+        800: darken($_vcare_secondary-color, 30%),
+        900: $_vcare_secondary-color-dark,
+        A100: $_vcare_secondary-color-light,
+        A200: lighten($_vcare_secondary-color, 30%),
+        A400: lighten($_vcare_secondary-color, 20%),
+        A700: darken($_vcare_secondary-color, 20%),
+        contrast: (
+                50: opacify(white, .64),
+                100: opacify(white, .64),
+                200: opacify(white, .64),
+                300: opacify(white, .64),
+                400: opacify(white, .64),
+                500: $_vcare_secondary-color-text,
+                600: opacify(white, .46),
+                700: opacify(white, .46),
+                800: opacify(white, .46),
+                900: opacify(white, .46),
+                A100: opacify(white, .64),
+                A200: opacify(white, .64),
+                A400: opacify(white, .64),
+                A700: opacify(white, .46)
+        )
+);
+
+@function get-vcare-typography-config() {
+  @return mat.define-typography-config($font-family: '"Roboto Condensed", sans-serif');
+}
+
+@function get-vcare-primary-palette() {
+  @return mat.define-palette($_vcare_primary-palette, 500, 100, 900);
+}
+
+@function get-vcare-accent-palette() {
+  @return mat.define-palette($_vcare_secondary-palette, 500, 100, 900);
+}
+
+@function get-vcare-warn-palette() {
+  @return mat.define-palette(mat.$red-palette);
+}
+
+@function get-vcare-gallery-background-image() {
+  @return url('/assets/vcare-logo.png');
+}
+
+@function get-vcare-modeler-background-image() {
+  @return url('/assets/vcare-logo.png');
+}
+
+@function get-vcare-theme() {
+  @return (
+          theme: mat.define-light-theme((
+                  color: (
+                          primary: get-vcare-primary-palette(),
+                          accent: get-vcare-accent-palette(),
+                          warn: get-vcare-warn-palette()
+                  ),
+                  typography: get-vcare-typography-config()
+          )),
+          background: (
+                  gallery: get-vcare-gallery-background-image(),
+                  modeler: get-vcare-modeler-background-image()
+          )
+  );
+}

@@ -1,0 +1,9 @@
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin theme($theme, $background) {
+
+  .modeler-screen::before {
+    background-image: map.get($background, 'modeler');
+  }
+}

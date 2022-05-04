@@ -1,20 +1,22 @@
 .modeler-screen {
   height: 100%;
-  background-image: url('/assets/ipaac-logo-symbolic-yellow-10.png');
-  background-repeat: no-repeat;
-  -webkit-background-size: contain;
-  -moz-background-size: contain;
-  -o-background-size: contain;
-  background-size: contain;
-  background-position: center;
+  position: relative;
+  width: 100%;
+  justify-content: center;
+
 }
-.gallery-screen {
-  height: 100%;
-  background-image: url('/assets/ipaac-logo-symbolic-yellow.png');
+.modeler-screen::before {
+  content: "";
   background-repeat: no-repeat;
   -webkit-background-size: contain;
   -moz-background-size: contain;
   -o-background-size: contain;
   background-size: contain;
   background-position: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0.15;
 }

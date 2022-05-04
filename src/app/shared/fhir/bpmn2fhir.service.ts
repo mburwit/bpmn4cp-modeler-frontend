@@ -6,24 +6,25 @@ import {environment as env} from "../../../environments/environment";
 
 const endpoint = env.config.bpmn2fhir.entryPoint;
 const httpOptions = {
-  headers: new HttpHeaders({
-    "Content-Type": "application/xml"
-  })
+    headers: new HttpHeaders({
+        "Content-Type": "application/xml",
+        "charset": "UTF-8"
+    })
 };
 
 @Injectable({
-  providedIn: "root"
+    providedIn: "root"
 })
 export class Bpmn2fhirService {
 
-  constructor(private http: HttpClient) {
-  }
+    constructor(private http: HttpClient) {
+    }
 
-  transformPlainBpmnXml(bpmnXml: string): Observable<IPlanDefinition> {
-    return this.http.post<IPlanDefinition>(endpoint, bpmnXml);
-  }
+    transformPlainBpmnXml(bpmnXml: string): Observable<IPlanDefinition> {
+        return this.http.post<IPlanDefinition>(endpoint, bpmnXml, httpOptions);
+    }
 
-  transformBase64BpmnXml(base64BpmnXml: string): Observable<IPlanDefinition> {
-    return this.transformPlainBpmnXml(decodeURIComponent(escape(atob(base64BpmnXml))));
-  }
+    transformBase64BpmnXml(base64BpmnXml: string): Observable<IPlanDefinition> {
+        return this.transformPlainBpmnXml(decodeURIComponent(escape(atob(base64BpmnXml))));
+    }
 }

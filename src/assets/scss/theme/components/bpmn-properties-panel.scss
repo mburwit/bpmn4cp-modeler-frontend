@@ -1,0 +1,57 @@
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+// BPMN Properties Panel
+@mixin theme($theme) {
+  // Get the color config from the theme.
+  $color-config: mat.get-color-config($theme);
+  // Get the primary color palette from the color-config.
+  $primary-palette: map.get($color-config, 'primary');
+
+  ul.bpp-properties-tabs-links > li.bpp-active a {
+    border-top: 2px solid mat.get-color-from-palette($primary-palette, 500);
+  }
+
+  .bpp-properties-group:hover > .group-toggle:hover {
+    background-color: mat.get-color-from-palette($primary-palette, 500);
+  }
+
+  .bpp-properties-panel {
+    background-color: #fafafa !important;
+    border-left: 1px solid mat.get-color-from-palette($primary-palette, 900);
+    border-bottom: 1px solid mat.get-color-from-palette($primary-palette, 900);
+  }
+
+  .bpp-properties-panel button:hover {
+    color: mat.get-color-from-palette($primary-palette, 500);
+  }
+
+  .bpp-properties-group.group-closed {
+    max-height: 25px;
+    background-color: unset;
+  }
+
+  .bpp-properties-group.group-closed:hover > .group-label {
+    color: mat.get-color-from-palette($primary-palette, 500);;
+  }
+
+  .bpp-properties-panel input:focus,
+  .bpp-properties-panel button:focus,
+  .bpp-properties-panel textarea:focus,
+  .bpp-properties-panel [contenteditable]:focus {
+    border-color: mat.get-color-from-palette($primary-palette, 900);
+    box-shadow: 0 0 1px 2px mat.get-color-from-palette($primary-palette, 100);
+  }
+
+  .bpp-entry-link {
+    color: mat.get-color-from-palette($primary-palette, 500);
+  }
+
+  .bpp-field-description a {
+    color: mat.get-color-from-palette($primary-palette, 900);
+  }
+
+  .bpp-field-description a:hover {
+    color: mat.get-color-from-palette($primary-palette, 500);
+  }
+}
