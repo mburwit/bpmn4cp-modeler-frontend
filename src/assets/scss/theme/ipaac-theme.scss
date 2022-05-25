@@ -12,8 +12,8 @@ $_ipaac_secondary-color-dark: #13265d;
 $_ipaac_secondary-color-text: #fff;
 
 $_ipaac_primary-palette: (
-        50: $_ipaac_primary-color-light,
-        100: $_ipaac_primary-color-light,
+        50: lighten($_ipaac_primary-color, 50%),
+        100: lighten($_ipaac_primary-color, 40%),
         200: lighten($_ipaac_primary-color, 30%),
         300: lighten($_ipaac_primary-color, 20%),
         400: lighten($_ipaac_primary-color, 10%),
@@ -21,8 +21,8 @@ $_ipaac_primary-palette: (
         600: darken($_ipaac_primary-color, 10%),
         700: darken($_ipaac_primary-color, 20%),
         800: darken($_ipaac_primary-color, 30%),
-        900: $_ipaac_primary-color-dark,
-        A100: $_ipaac_primary-color-light,
+        900: darken($_ipaac_primary-color, 40%),
+        A100: lighten($_ipaac_primary-color, 40%),
         A200: lighten($_ipaac_primary-color, 30%),
         A400: lighten($_ipaac_primary-color, 20%),
         A700: darken($_ipaac_primary-color, 20%),
@@ -45,8 +45,8 @@ $_ipaac_primary-palette: (
 );
 
 $_ipaac_secondary-palette: (
-        50: $_ipaac_secondary-color-light,
-        100: $_ipaac_secondary-color-light,
+        50: lighten($_ipaac_secondary-color, 50%),
+        100: lighten($_ipaac_secondary-color, 40%),
         200: lighten($_ipaac_secondary-color, 30%),
         300: lighten($_ipaac_secondary-color, 20%),
         400: lighten($_ipaac_secondary-color, 10%),
@@ -54,8 +54,8 @@ $_ipaac_secondary-palette: (
         600: darken($_ipaac_secondary-color, 10%),
         700: darken($_ipaac_secondary-color, 20%),
         800: darken($_ipaac_secondary-color, 30%),
-        900: $_ipaac_secondary-color-dark,
-        A100: $_ipaac_secondary-color-light,
+        900: darken($_ipaac_secondary-color, 40%),
+        A100: lighten($_ipaac_secondary-color, 40%),
         A200: lighten($_ipaac_secondary-color, 30%),
         A400: lighten($_ipaac_secondary-color, 20%),
         A700: darken($_ipaac_secondary-color, 20%),

@@ -12,8 +12,8 @@ $_default_secondary-color-dark: #002535;
 $_default_secondary-color-text: #fff;
 
 $_default_primary-palette: (
-        50: $_default_primary-color-light,
-        100: $_default_primary-color-light,
+        50: lighten($_default_primary-color, 50%),
+        100: lighten($_default_primary-color, 40%),
         200: lighten($_default_primary-color, 30%),
         300: lighten($_default_primary-color, 20%),
         400: lighten($_default_primary-color, 10%),
@@ -21,7 +21,7 @@ $_default_primary-palette: (
         600: darken($_default_primary-color, 10%),
         700: darken($_default_primary-color, 20%),
         800: darken($_default_primary-color, 30%),
-        900: $_default_primary-color-dark,
+        900: darken($_default_primary-color, 40%),
         A100: $_default_primary-color-light,
         A200: lighten($_default_primary-color, 30%),
         A400: lighten($_default_primary-color, 20%),
@@ -45,8 +45,8 @@ $_default_primary-palette: (
 );
 
 $_default_secondary-palette: (
-        50: $_default_secondary-color-light,
-        100: $_default_secondary-color-light,
+        50: lighten($_default_secondary-color, 50%),
+        100: lighten($_default_secondary-color, 40%),
         200: lighten($_default_secondary-color, 30%),
         300: lighten($_default_secondary-color, 20%),
         400: lighten($_default_secondary-color, 10%),
@@ -54,8 +54,8 @@ $_default_secondary-palette: (
         600: darken($_default_secondary-color, 10%),
         700: darken($_default_secondary-color, 20%),
         800: darken($_default_secondary-color, 30%),
-        900: $_default_secondary-color-dark,
-        A100: $_default_secondary-color-light,
+        900: darken($_default_secondary-color, 40%),
+        A100: lighten($_default_secondary-color, 40%),
         A200: lighten($_default_secondary-color, 30%),
         A400: lighten($_default_secondary-color, 20%),
         A700: darken($_default_secondary-color, 20%),
