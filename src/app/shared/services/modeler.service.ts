@@ -1,15 +1,15 @@
 import {Injectable} from "@angular/core";
 import {BpmnModeler} from "bpmn4cp/dist/index_bundle.js";
 import {BehaviorSubject, Observable, Subject} from "rxjs";
-import {jsPDF} from "jspdf";
 import "svg2pdf.js";
+import {PdfOptions, PdfService} from "./export/pdf/pdf.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class ModelerService {
 
-  constructor() {
+  constructor(private pdfService: PdfService) {
     this.errorEvents = new Subject();
     this.currentXml$ = new BehaviorSubject("");
     this.currentSvg$ = new BehaviorSubject("");
@@ -165,33 +165,35 @@ export class ModelerService {
   }
 
   saveSvg(name: string) {
-    this.download(name, this.svgAsDataUri(), ModelerService.downloadOptions());
+    name = name.endsWith(".svg") ? name : `${name}.svg`;
+    return this.download(name, this.svgAsDataUri(), ModelerService.downloadOptions());
   }
 
   savePng(name: string) {
     const downloadOptions = ModelerService.downloadOptions();
-    this.pngAsDataUri().then(
-      (uri) => this.download(name, uri, downloadOptions)
+    return this.pngAsDataUri().then(
+      (uri) => {
+        name = name.endsWith(".png") ? name : `${name}.png`;
+        return this.download(name, uri, downloadOptions)
+      }
     );
   }
 
   savePdf(name: string) {
-    const svgContainer = document.createElement("div");
-    svgContainer.innerHTML = this.currentSvg$.getValue().trim().slice(
-      this.currentSvg$.getValue().indexOf("<svg ")
-    );
-    const svgElement = svgContainer.firstElementChild;
-    svgElement.getBoundingClientRect(); // force layout calculation
-    const width = svgElement["width"].baseVal.value;
-    const height = svgElement["height"].baseVal.value;
-    const pdf = new jsPDF(width > height ? "l" : "p", "pt", [width, height]);
-    pdf.svg(svgElement).then(
-      () => pdf.save(name)
-    );
+    const pdfOptions: PdfOptions = {
+      docName: name,
+      modelSvg: this.currentSvg$.getValue(),
+      bpmnXml: this.currentXml$.getValue()
+    }
+    return this.pdfService.savePdf(pdfOptions).then(blob => {
+      name = name.endsWith(".pdf") ? name : `${name}.pdf`;
+      return this.downloadBlob(name, blob, ModelerService.downloadOptions());
+    });
   }
 
   saveBpmnXml(name: string) {
-    this.download(name, this.bpmnXmlAsDataUri(), ModelerService.downloadOptions());
+    name = name.endsWith(".xml") ? name : `${name}.xml`;
+    return this.download(name, this.bpmnXmlAsDataUri(), ModelerService.downloadOptions());
   }
 
   private svgAsDataUri(): string {
@@ -225,30 +227,42 @@ export class ModelerService {
   }
 
   private download(name: string, uri: string, options: any) {
-    if (navigator.msSaveOrOpenBlob) {
-      navigator.msSaveOrOpenBlob(ModelerService.base64UriToBlob(uri), name);
-    } else {
-      const saveLink = document.createElement("a");
-      if ("download" in saveLink) {
-        saveLink.download = name;
-        saveLink.style.display = "none";
-        document.body.appendChild(saveLink);
-        try {
-          const blob = ModelerService.base64UriToBlob(uri);
-          const url = URL.createObjectURL(blob);
-          saveLink.href = url;
-          saveLink.onclick = () => requestAnimationFrame(() => URL.revokeObjectURL(url));
-        } catch (e) {
-          console.error(e);
-          console.warn("Error while getting object URL. Falling back to string URL.");
-          saveLink.href = uri;
+    return this.downloadBlob(name, ModelerService.base64UriToBlob(uri), options);
+  }
+
+  private downloadBlob(name: string, blob: Blob, options: any) {
+    return new Promise((resolve, reject) => {
+      if (navigator.msSaveOrOpenBlob) {
+        return Promise.resolve(navigator.msSaveOrOpenBlob(blob, name));
+      } else {
+        const saveLink = document.createElement("a");
+        if ("download" in saveLink) {
+          saveLink.download = name;
+          saveLink.style.display = "none";
+          document.body.appendChild(saveLink);
+          try {
+            const url = URL.createObjectURL(blob);
+            saveLink.href = url;
+            saveLink.onclick = () => requestAnimationFrame(() => URL.revokeObjectURL(url));
+          } catch (e) {
+            console.error(e);
+            reject(e);
+          }
+          saveLink.click();
+          document.body.removeChild(saveLink);
+          resolve(true);
+        } else if (options && options.popup) {
+          try {
+            const url = URL.createObjectURL(blob);
+            options.popup.document.title = name;
+            options.popup.location.replace(url);
+            resolve(true);
+          } catch (e) {
+            console.error(e);
+            reject(e);
+          }
         }
-        saveLink.click();
-        document.body.removeChild(saveLink);
-      } else if (options && options.popup) {
-        options.popup.document.title = name;
-        options.popup.location.replace(uri);
       }
-    }
+    });
   }
 }

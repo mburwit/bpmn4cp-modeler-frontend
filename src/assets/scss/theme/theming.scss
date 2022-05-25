@@ -7,6 +7,7 @@
 @use 'app/gallery/components/gallery.component-theme' as gallery;
 @use 'app/gallery/components/gallery-item/gallery-item.component-theme' as gallery-item;
 @use 'app/modeler/components/modeler/modeler.component-theme' as modeler;
+@use './pdf-export/pdf-export' as pdf-export;
 
 @import "default-theme";
 @import "ipaac-theme";
@@ -16,7 +17,6 @@ $default-theme: get-default-theme();
 $ipaac-theme: get-ipaac-theme();
 $vcare-theme: get-vcare-theme();
 
-// Include Angular Material core mixin (theme customization)
 @include mat.core();
 
 @mixin apply-theme($theme) {
@@ -29,4 +29,5 @@ $vcare-theme: get-vcare-theme();
   @include modeler.theme(map.get($theme, 'theme'), map.get($theme, 'background'));
   @include gallery.theme(map.get($theme, 'theme'), map.get($theme, 'background'));
   @include gallery-item.theme(map.get($theme, 'theme'));
+  @include pdf-export.theme(map.get($theme, 'theme'));
 }

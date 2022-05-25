@@ -52,7 +52,8 @@ export class ModelerToolbarComponent implements OnInit {
 
   @Input()
   templateTitle: Observable<string> = of("");
-  title = "";
+  displayTitle = "";
+  fullTitle = "";
 
   @Output()
   toolbarEvents: EventEmitter<{ name: string, data?: any }>;
@@ -76,7 +77,8 @@ export class ModelerToolbarComponent implements OnInit {
 
   ngOnInit() {
     this.templateTitle.subscribe((templateTitle) => {
-      this.title = templateTitle.length > 30 ? templateTitle.slice(0, 30).concat("...") : templateTitle;
+      this.fullTitle = templateTitle;
+      this.displayTitle = templateTitle.length > 30 ? templateTitle.slice(0, 30).concat("...") : templateTitle;
     });
   }
 
@@ -130,18 +132,30 @@ export class ModelerToolbarComponent implements OnInit {
   }
 
   downloadSvg() {
-    this.modelerService.saveSvg(`${this.title}.svg`);
+    this.toolbarEvents.emit({
+      name: "toolbar.download",
+      data: {type: "svg", fileName: this.fullTitle}
+    });
   }
 
   downloadPng() {
-    this.modelerService.savePng(`${this.title}.png`);
+    this.toolbarEvents.emit({
+      name: "toolbar.download",
+      data: {type: "png", fileName: this.fullTitle}
+    });
   }
 
   downloadPdf() {
-    this.modelerService.savePdf(`${this.title}.pdf`);
+    this.toolbarEvents.emit({
+      name: "toolbar.download",
+      data: {type: "pdf", fileName: this.fullTitle}
+    });
   }
 
   downloadBpmnXml() {
-    this.modelerService.saveBpmnXml(`${this.title}.xml`);
+    this.toolbarEvents.emit({
+      name: "toolbar.download",
+      data: {type: "xml", fileName: this.fullTitle}
+    });
   }
 }

@@ -121,6 +121,11 @@ export class ModelerComponent implements OnInit, ComponentCanDeactivate {
       this.modelerService.undo();
     } else if (event.name === "toolbar.redo") {
       this.modelerService.redo();
+    } else if (event.name === "toolbar.download") {
+      this.progressSpinnerService.setProgressing(true);
+      this.download(event.data).then(() => {
+        this.progressSpinnerService.setProgressing(false);
+      });
     }
   }
 
@@ -200,6 +205,21 @@ export class ModelerComponent implements OnInit, ComponentCanDeactivate {
         }
       });
     });
+  }
+
+  private download(data: {type: string, fileName: string}) {
+    if (data.type === "svg") {
+      return this.modelerService.saveSvg(`${data.fileName}`);
+    } else if (data.type === "png") {
+      return this.modelerService.savePng(`${data.fileName}`);
+    } else if (data.type === "pdf") {
+      return this.modelerService.savePdf(`${data.fileName}`);
+    } else if (data.type === "xml") {
+      return this.modelerService.saveBpmnXml(`${data.fileName}`);
+    } else {
+        console.warn(`Don't know how to handle download event for data ${JSON.stringify(data)}`);
+        return Promise.resolve();
+    }
   }
 }
 

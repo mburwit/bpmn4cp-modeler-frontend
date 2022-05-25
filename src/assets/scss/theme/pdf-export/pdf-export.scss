@@ -1,0 +1,109 @@
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin theme($theme) {
+  $color-config: mat.get-color-config($theme);
+  $primary-palette: map.get($color-config, 'primary');
+
+  .pdf {
+    font: 8px/10px "Roboto", sans-serif;
+    color: #000;
+
+    h1, h2, h3 {
+      font-family: "Roboto", sans-serif;
+      font-weight: normal;
+      color: mat.get-color-from-palette($primary-palette, 500);
+      margin: 8px 0 8px;
+    }
+
+    h1 {
+      font-size: 14px;
+      line-height: 18px;
+    }
+
+    h2 {
+      font-size: 12px;
+      line-height: 16px;
+    }
+
+    h3 {
+      font-size: 10px;
+      line-height: 14px;
+    }
+
+    p, ul, ol {
+      padding-bottom: 4px;
+    }
+
+    ul, ol {
+      padding-inline-start: 20px;
+    }
+
+    table {
+      display: block;
+      margin: 0 12px;
+      padding-bottom: 8px;
+    }
+
+    tbody {
+      display: inherit;
+    }
+
+    tr {
+      align-items: stretch;
+      display: inline-flex;
+      min-width: 100%;
+      background: inherit;
+      border-bottom: 0.5px solid #000;
+
+      div {
+        min-height: 24px;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        word-wrap: break-word;
+      }
+    }
+
+    tr.header {
+      color: mat.get-color-from-palette($primary-palette, 500);
+      border-bottom: 1px solid mat.get-color-from-palette($primary-palette, 500);
+    }
+
+    td, th {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      word-wrap: break-word;
+      min-height: inherit;
+    }
+
+    td:first-of-type, th:first-of-type {
+      padding-left: 4px;
+    }
+  }
+
+  .bibliography {
+      display: block;
+      min-width: 100%;
+
+      div {
+        float: unset;
+        padding-bottom: 8px;
+        width: 95%;
+        word-wrap: break-word;
+      }
+
+      .label {
+        float: left;
+        width: 5%;
+      }
+
+      a, .link {
+        font: 6px/10px "Courier";
+        color: mat.get-color-from-palette($primary-palette, 500);
+        cursor: pointer;
+      }
+  }
+}
