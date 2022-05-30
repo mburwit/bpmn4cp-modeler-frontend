@@ -130,7 +130,7 @@ export class PdfService {
             Array.from(rowItems).sort((a, b) => {
                 return (a.name < b.name ? -1 : (a.name > b.name ? 1 : 0));
             }).forEach((rowItem) => {
-                result += `<tr><td><div>${rowItem.name}</div></td><td><div>${Array.from(rowItem.items.values()).map(item => item.name).sort().join(", ")}</div></td></tr>`;
+                result += `<tr><td class="flex1"><div>${rowItem.name}</div></td><td class="flex3"><div>${Array.from(rowItem.items.values()).map(item => item.name).sort().join(", ")}</div></td></tr>`;
             });
             return result;
         }
@@ -146,8 +146,8 @@ export class PdfService {
                     html += `  <h2>${pdfData.lastChapter}.1 Stages</h2>`;
                     html += "  <table>" +
                         "    <tr class='header'>" +
-                        "      <th><div>Stage</div></th>" +
-                        "      <th><div>Actors involved</div></th>" +
+                        "      <th class='flex1'><div>Stage</div></th>" +
+                        "      <th class='flex3'><div>Actors involved</div></th>" +
                         "    </tr>";
                     html += tableRows(data.stages.values());
                     html += "  </table>";
@@ -170,8 +170,8 @@ export class PdfService {
                     html += `  <h2>${pdfData.lastChapter}.2 Actors</h2>`;
                     html += "  <table>" +
                         "    <tr class='header'>" +
-                        "      <th><div>Actor</div></th>" +
-                        "      <th><div>Stages involved</div></th>" +
+                        "      <th class='flex1'><div>Actor</div></th>" +
+                        "      <th class='flex3'><div>Stages involved</div></th>" +
                         "    </tr>";
                     html += tableRows(data.actors.values());
                     html += "  </table>";
