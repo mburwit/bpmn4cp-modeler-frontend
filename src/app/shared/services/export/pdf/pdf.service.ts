@@ -66,7 +66,12 @@ export class PdfService {
                 lastChapter: 0,
                 numberOfPages: 0
             }
-        }).then(PdfService.addModelSvg).then(PdfService.addStagesAndActors).then(PdfService.addBibliography).then(PdfService.outputPdf);
+        })
+            .then(PdfService.addA4ModelSvg)
+            .then(PdfService.addStagesAndActors)
+            .then(PdfService.addBibliography)
+            .then(PdfService.addModelSvg)
+            .then(PdfService.outputPdf);
     }
 
     private static appendJsPdf(pdfData: PdfData) {
@@ -102,7 +107,12 @@ export class PdfService {
         return Promise.resolve(pdfData);
     }
 
-    private static addModelSvg(pdfData: PdfData) {
+    private static addA4ModelSvg(pdfData: PdfData) {
+        return PdfService.addModelSvg(pdfData, true);
+    }
+
+
+    private static addModelSvg(pdfData: PdfData, fitPageSize?: boolean) {
         if (pdfData.options.modelSvg) {
             const currentSvg = pdfData.options.modelSvg;
             const svgContainer = document.createElement("div");
@@ -111,16 +121,34 @@ export class PdfService {
             );
             const svgElement = svgContainer.firstElementChild;
             svgElement.getBoundingClientRect(); // force layout calculation
-            const width = svgElement["width"].baseVal.value + PAGE_MARGIN.left + PAGE_MARGIN.right;
-            const height = svgElement["height"].baseVal.value + PAGE_MARGIN.top + PAGE_MARGIN.bottom;
-            pdfData.jsPdf = new jsPDF(width > height ? "landscape" : "portrait", "px", [width, height]);
-            return pdfData.jsPdf.svg(svgElement, {
+            const originalWidth = svgElement["width"].baseVal.value;
+            const originalHeight = svgElement["height"].baseVal.value;
+            let scaledWidth = originalWidth;
+            let scaledHeight = originalHeight;
+            if (fitPageSize) {
+                scaledWidth = (originalWidth > originalHeight ? 630 : 445) - PAGE_MARGIN.left - PAGE_MARGIN.right;
+                scaledHeight = (originalWidth > originalHeight ? 445 : 630) - PAGE_MARGIN.top - PAGE_MARGIN.bottom;
+            }
+            pdfData.jsPdf = new jsPDF(
+                originalWidth > originalHeight ? "landscape" : "portrait",
+                "px",
+                fitPageSize ? "a4": [
+                    originalWidth + PAGE_MARGIN.left + PAGE_MARGIN.right,
+                    originalHeight + PAGE_MARGIN.top + PAGE_MARGIN.bottom
+                ]);
+            let chain = pdfData.jsPdf.svg(svgElement, {
                 x: PAGE_MARGIN.left,
                 y: PAGE_MARGIN.top,
+                width: scaledWidth,
+                height: scaledHeight
             }).then(() => {
                 svgContainer.remove();
                 return pdfData;
-            }).then(PdfService.appendJsPdf);
+            });
+            if (fitPageSize) {
+                chain = chain.then(PdfService.addHeaderAndFooter)
+            }
+            return chain.then(PdfService.appendJsPdf);
         }
     }
 
@@ -232,8 +260,8 @@ export class PdfService {
             jsPDF: pdfData.jsPdf,
             width: divWidth
         }).then(() => {
-            // document.body.getElementsByClassName("cdk-overlay-container")[0].appendChild(containerDiv);
-            containerDiv.remove();
+            document.body.getElementsByClassName("cdk-overlay-container")[0].appendChild(containerDiv);
+            // containerDiv.remove();
             return pdfData;
         }).then(PdfService.addHeaderAndFooter).then(PdfService.appendJsPdf);
     }
