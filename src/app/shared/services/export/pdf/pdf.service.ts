@@ -260,8 +260,8 @@ export class PdfService {
             jsPDF: pdfData.jsPdf,
             width: divWidth
         }).then(() => {
-            document.body.getElementsByClassName("cdk-overlay-container")[0].appendChild(containerDiv);
-            // containerDiv.remove();
+            //document.body.getElementsByClassName("cdk-overlay-container")[0].appendChild(containerDiv);
+            containerDiv.remove();
             return pdfData;
         }).then(PdfService.addHeaderAndFooter).then(PdfService.appendJsPdf);
     }
