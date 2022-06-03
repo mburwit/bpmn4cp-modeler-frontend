@@ -1,5 +1,6 @@
 // Import Angular Material functions (theme customization)
 @use '~@angular/material' as mat;
+@use 'sass:map';
 
 // import Theming
 @import "assets/scss/theme/theming";
@@ -16,9 +17,8 @@
 // Import ICD Embedded Coding Tool Styles
 @import '~@whoicd/icd11ect/style.css';
 
-.default-theme {
-  @include apply-theme($default-theme);
-}
+@include mat.all-component-themes(map.get($default-theme, 'theme'));
+@include theme-components($default-theme);
 
 .ipaac-theme {
   @include apply-theme($ipaac-theme);

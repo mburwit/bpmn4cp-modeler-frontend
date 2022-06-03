@@ -78,7 +78,7 @@ $_vcare_secondary-palette: (
 );
 
 @function get-vcare-typography-config() {
-  @return mat.define-typography-config($font-family: '"Roboto Condensed", sans-serif');
+  @return mat.define-typography-config();
 }
 
 @function get-vcare-primary-palette() {

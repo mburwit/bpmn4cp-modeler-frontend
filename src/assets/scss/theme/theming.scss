@@ -1,8 +1,10 @@
 @use '~@angular/material' as mat;
 @use 'sass:map';
 @use 'components/bpmn-properties-panel' as bpmn-properties-panel;
+@use 'components/bpmn-palette' as bpmn-palette;
 @use 'components/labels' as labels;
 @use 'components/snackbar' as snackbar;
+@use 'components/mat-card' as cards;
 @use 'app/modeler/components/modeler/modeler-toolbar/modeler-toolbar.component-theme' as modeler-toolbar;
 @use 'app/gallery/components/gallery.component-theme' as gallery;
 @use 'app/gallery/components/gallery-item/gallery-item.component-theme' as gallery-item;
@@ -20,11 +22,17 @@ $vcare-theme: get-vcare-theme();
 @include mat.core();
 
 @mixin apply-theme($theme) {
-  @include mat.all-component-themes(map.get($theme, 'theme'));
+  @include mat.all-component-colors(map.get($theme, 'theme'));
   @include mat.all-component-typographies(map.get($theme, 'theme'));
+  @include theme-components($theme);
+}
+
+@mixin theme-components($theme) {
   @include bpmn-properties-panel.theme(map.get($theme, 'theme'));
+  @include bpmn-palette.theme(map.get($theme, 'theme'));
   @include labels.theme(map.get($theme, 'theme'));
   @include snackbar.theme(map.get($theme, 'theme'));
+  @include cards.theme(map.get($theme, 'theme'));
   @include modeler-toolbar.theme(map.get($theme, 'theme'));
   @include modeler.theme(map.get($theme, 'theme'), map.get($theme, 'background'));
   @include gallery.theme(map.get($theme, 'theme'), map.get($theme, 'background'));

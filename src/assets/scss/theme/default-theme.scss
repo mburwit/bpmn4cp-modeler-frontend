@@ -78,7 +78,7 @@ $_default_secondary-palette: (
 );
 
 @function get-default-typography-config() {
-  @return mat.define-typography-config($font-family: '"Roboto Condensed", sans-serif');
+  @return mat.define-typography-config();
 }
 
 @function get-default-primary-palette() {

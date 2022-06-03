@@ -1,0 +1,8 @@
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin theme($theme) {
+  .mat-card-title {
+    @include mat.typography-level(map.get($theme, 'typography'), 'title');
+  }
+}

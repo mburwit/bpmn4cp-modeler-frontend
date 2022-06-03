@@ -78,7 +78,7 @@ $_ipaac_secondary-palette: (
 );
 
 @function get-ipaac-typography-config() {
-  @return mat.define-typography-config($font-family: '"Roboto Condensed", sans-serif');
+  @return mat.define-typography-config();
 }
 
 @function get-ipaac-primary-palette() {
