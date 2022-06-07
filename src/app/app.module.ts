@@ -6,9 +6,9 @@ import {MainLayoutComponent} from "./layouts/main-layout.component";
 import {AppRoutingModule} from "./app-routing.module";
 import {CoreModule} from "./core/core.module";
 import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
-import {initializer, InjectorHolder} from "./app-init";
+import {BasicAuthInterceptor, initializer, InjectorHolder} from "./app-init";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -29,7 +29,8 @@ import {HttpClientModule} from "@angular/common/http";
       useFactory: initializer,
       multi: true,
       deps: [KeycloakService]
-    }
+    },
+    { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })

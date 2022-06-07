@@ -12,4 +12,7 @@
   window.__env.repositoryPort = 8080;
   window.__env.repositoryPath = "/";
   window.__env.contextPath = "/";
+  window.__env.repositoryAuth = false;
+  window.__env.repositoryAuthUser = "username";
+  window.__env.repositoryAuthPassword = "password";
 })(this);

@@ -53,7 +53,12 @@ export const environment = {
   config: {
     backend: base(backend),
     icdapi: base(icdapi),
-    bpmn2fhir: base(bpmn2fhir)
+    bpmn2fhir: base(bpmn2fhir),
+    auth: {
+      enabled: JSON.parse(windowEnv["repositoryAuth"]),
+      username: windowEnv["repositoryAuthUser"],
+      password: windowEnv["repositoryAuthPassword"]
+    }
   }
 };
 

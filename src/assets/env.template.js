@@ -12,4 +12,7 @@
   window.__env.repositoryPort = "${REPOSITORY_PORT}";
   window.__env.repositoryPath = "${REPOSITORY_PATH}";
   window.__env.contextPath = "${CONTEXT_PATH}";
+  window.__env.repositoryAuth = "${REPOSITORY_AUTH}" === "true";
+  window.__env.repositoryAuthUser = "${REPOSITORY_AUTH_USER}";
+  window.__env.repositoryAuthPassword = "${REPOSITORY_AUTH_PASSWORD}";
 })(this);
