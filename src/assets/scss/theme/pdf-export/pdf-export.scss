@@ -1,5 +1,4 @@
 @use 'sass:map';
-@use 'sizes.html2pdf' as html2pdf;
 @use 'sizes.jspdf' as jspdf;
 @use '~@angular/material' as mat;
 
@@ -8,13 +7,17 @@
   $primary-palette: map.get($color-config, 'primary');
 
   .pdf {
-    font-family: "Roboto", sans-serif;
+    font-family: "Helvetica", sans-serif;
     color: #000;
 
     h1, h2, h3 {
-      font-family: "Roboto", sans-serif;
+      font-family: "Helvetica", sans-serif;
       font-weight: normal;
       color: mat.get-color-from-palette($primary-palette, 500);
+    }
+
+    h1 {
+      font-weight: bold;
     }
 
     table {

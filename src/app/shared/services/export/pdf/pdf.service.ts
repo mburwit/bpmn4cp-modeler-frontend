@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
 import {jsPDF} from "jspdf";
+import autoTable, {RowInput, UserOptions} from 'jspdf-autotable';
 import {PDFDocument} from "pdf-lib";
 import './fonts/ElementalEnd';
 import './fonts/Roboto';
-import * as html2pdf from "html2pdf.js";
 
 // mm
 const PAGE_MARGIN = {
-    top: 20,
+    top: 25,
     left: 20,
     bottom: 20,
     right: 20
@@ -53,6 +53,10 @@ export interface PdfOptions {
     docName: string;
     modelSvg?: string;
     bpmnXml?: string | Document;
+    colors?: {
+        primary?: string;
+        secondary?: string;
+    }
 }
 
 interface PdfData {
@@ -61,6 +65,10 @@ interface PdfData {
     options: PdfOptions;
     lastChapter: number;
     numberOfPages: number;
+    cursor: {
+        x: number,
+        y: number
+    }
 }
 
 @Injectable({
@@ -77,7 +85,10 @@ export class PdfService {
                 options: options,
                 pdfDoc: pdfDoc,
                 lastChapter: 0,
-                numberOfPages: 0
+                numberOfPages: 0,
+                cursor: {
+                    x: 0, y: 0
+                }
             }
         })
             .then(PdfService.addA4ModelSvg)
@@ -104,6 +115,7 @@ export class PdfService {
         for (let i = 1; i < pageCount; i++) {
             pdfData.jsPdf.setFont('Roboto', 'italic')
             pdfData.jsPdf.setFontSize(10)
+            pdfData.jsPdf.setTextColor("#000");
             pdfData.jsPdf.setPage(i);
             pdfData.jsPdf.text(`Page ${i + pageOffset}`,
                 pdfData.jsPdf.internal.pageSize.width - a4scale(pdfData)(HEADER.right),
@@ -177,44 +189,39 @@ export class PdfService {
 
     private static addStagesAndActors(pdfData: PdfData) {
         const tableRows = function (rowItems: IterableIterator<Item>) {
-            let result = "";
-            Array.from(rowItems).sort((a, b) => {
+            return Array.from(rowItems).sort((a, b) => {
                 return (a.name < b.name ? -1 : (a.name > b.name ? 1 : 0));
-            }).forEach((rowItem) => {
-                result += `<tr><td class="flex1"><div>${rowItem.name}</div></td><td class="flex3"><div>${Array.from(rowItem.items.values()).map(item => item.name).sort().join(", ")}</div></td></tr>`;
-            });
-            return result;
+            }).map(rowItem =>
+                [
+                    {content: rowItem.name, styles: {}},
+                    {content: Array.from(rowItem.items.values()).map(item => item.name).sort().join(", "), styles: {}}
+                ]
+            );
         }
 
         if (pdfData.options.bpmnXml) {
             pdfData.options.bpmnXml = PdfService.parseXml(pdfData.options.bpmnXml);
             const data = PdfService.loadStagesAndActors(pdfData.options.bpmnXml);
             if (Object.keys(data).length > 0) {
-                pdfData.lastChapter += 1;
-                let html = "<section class='chapter'>";
-                html += `  <h1>${pdfData.lastChapter}. Stages & Actors</h1>`;
+                PdfService.newDocument(pdfData);
+                PdfService.addChapter(pdfData, `Stages & Actors`);
                 if (data.stages.size > 0) {
-                    html += `  <h2>${pdfData.lastChapter}.1 Stages</h2>`;
-                    html += "  <table>" +
-                        "    <tr class='header'>" +
-                        "      <th class='flex1'><div>Stage</div></th>" +
-                        "      <th class='flex3'><div>Actors involved</div></th>" +
-                        "    </tr>";
-                    html += tableRows(data.stages.values());
-                    html += "  </table>";
+                    PdfService.addSection(pdfData, 1, `Stages`);
+                    PdfService.addTable(
+                        pdfData,
+                        [[{content: `Stage`}, {content: `Actors involved`}]],
+                        tableRows(data.stages.values())
+                    );
                 }
                 if (data.actors.size > 0) {
-                    html += `  <h2>${pdfData.lastChapter}.2 Actors</h2>`;
-                    html += "  <table>" +
-                        "    <tr class='header'>" +
-                        "      <th class='flex1'><div>Actor</div></th>" +
-                        "      <th class='flex3'><div>Stages involved</div></th>" +
-                        "    </tr>";
-                    html += tableRows(data.actors.values());
-                    html += "  </table>";
+                    PdfService.addSection(pdfData, 2, `Actors`);
+                    PdfService.addTable(
+                        pdfData,
+                        [[{content: `Stage`}, {content: `Actors involved`}]],
+                        tableRows(data.actors.values())
+                    );
                 }
-                html += "</section>";
-                return PdfService.appendHtmlContainer(pdfData, html);
+                return Promise.resolve(pdfData).then(PdfService.addHeaderAndFooter).then(PdfService.appendJsPdf);
             }
         }
         return Promise.resolve(pdfData);
@@ -225,27 +232,28 @@ export class PdfService {
             pdfData.options.bpmnXml = PdfService.parseXml(pdfData.options.bpmnXml);
             const data = PdfService.loadQualityIndicators(pdfData.options.bpmnXml);
             if (data.size > 0) {
-                pdfData.lastChapter += 1;
-                let html = "<section class='chapter'>";
-                html += `  <h1>${pdfData.lastChapter}. Quality Indicators</h1>`;
-                data.forEach((qi, qiId, map) => {
-                    html += "<div class='avoid-page-break'>"
-                    html += `  <h2>${pdfData.lastChapter}.${Array.from(map.values()).indexOf(qi) + 1} ${qi.name}</h2>`;
-                    html += "  <table>" +
-                        "    <tr class='header'>" +
-                        "      <th colspan='2'><div>Stage</div></th>" +
-                        "    </tr>";
-                    html += Object.keys(qi).map(qiProperty => {
-                        let row = "<tr>";
-                        row += `<td class="flex1"><div>${qiProperty.substring(0, 1).toUpperCase()}${qiProperty.substring(1)}</div></td>`;
-                        row += `<td class="flex4"><div>${qi[qiProperty]}</div></td></tr>`;
-                        return row;
-                    }).join("");
-                    html += "  </table>";
-                    html += "<div>"
+                PdfService.newDocument(pdfData);
+                PdfService.addChapter(pdfData, `Quality Indicators`);
+                let counter = 0;
+                data.forEach(qi => {
+                    counter++;
+                    PdfService.addTable(
+                        pdfData,
+                        [[{
+                            content: `${pdfData.lastChapter}.${counter} ${qi.name.substring(0, 1).toUpperCase()}${qi.name.substring(1)}`,
+                            colSpan: 2
+                        }]],
+                        Object.keys(qi).map(qiProperty => {
+                            return [
+                                {
+                                    content: `${qiProperty.substring(0, 1).toUpperCase()}${qiProperty.substring(1)}`,
+                                    styles: {}
+                                },
+                                {content: `${qi[qiProperty]}`, styles: {}}
+                            ]
+                        }));
                 });
-                html += "</section>";
-                return PdfService.appendHtmlContainer(pdfData, html);
+                return Promise.resolve(pdfData).then(PdfService.addHeaderAndFooter).then(PdfService.appendJsPdf);
             }
         }
         return Promise.resolve(pdfData);
@@ -272,31 +280,6 @@ export class PdfService {
             }
         }
         return Promise.resolve(pdfData);
-    }
-
-    private static appendHtmlContainerAsImage(pdfData: PdfData, innerHtml: string) {
-        const containerDiv = document.createElement("div");
-        const divWidth = 210 - PAGE_MARGIN.left - PAGE_MARGIN.right;
-        containerDiv.setAttribute("style", `width: ${divWidth}mm; background-color: #fff;`);
-        containerDiv.setAttribute("class", `${document.body.getAttribute("class")} pdf`);
-        containerDiv.innerHTML = innerHtml;
-        const opt = {
-            margin: [PAGE_MARGIN.top, PAGE_MARGIN.left, PAGE_MARGIN.bottom, PAGE_MARGIN.right],
-            image: {type: 'jpg', quality: 0.1},
-            jsPDF: {unit: 'mm', format: 'a4', orientation: 'portrait'},
-            html2canvas: {
-                letterRendering: true,
-                scale: 0.95
-            },
-            pagebreak: {mode: ['avoid-all', 'css', 'legacy']}
-        };
-        return html2pdf().set(opt).from(containerDiv).toPdf().get("pdf")
-            .then((pdf) => {
-                //document.body.getElementsByClassName("cdk-overlay-container")[0].appendChild(containerDiv);
-                containerDiv.remove();
-                pdfData.jsPdf = pdf;
-                return pdfData;
-            }).then(PdfService.addHeaderAndFooter).then(PdfService.appendJsPdf);
     }
 
     private static appendHtmlContainer(pdfData: PdfData, innerHtml: string) {
@@ -384,13 +367,11 @@ export class PdfService {
                     const qiId = qiElements[i].getAttribute('id');
                     const qiName = qiElements[i].getAttribute('bpmn2:name') === "" ?
                         qiElements[i].getAttribute('id') : qiElements[i].getAttribute('bpmn2:name');
-                    const qiDomain = qiElements[i].getAttribute('domain') || "";
                     const qiDocElement = qiElements[i].getElementsByTagName("bpmn2:documentation");
                     const qiDocumentation = qiDocElement.length > 0 ? qiDocElement[0].innerHTML : "";
                     const qiDefElement = qiElements[i].getElementsByTagName("cp:qIDefinition")[0] || undefined;
                     const qi = {
                         name: qiName,
-                        // domain: qiDomain,
                         documentation: qiDocumentation,
                         text: qiDefElement ? qiDefElement.getAttribute("text") : undefined,
                         numerator: qiDefElement ? qiDefElement.getAttribute("numerator") : undefined,
@@ -447,8 +428,8 @@ export class PdfService {
             text = match[1] || match[4];
 
             // insert safe link
-            escaped.push(`<a class="link" href="${link}">${PdfService.escapeText(text)}</a>`);
-            // escaped.push(PdfService.escapeText(text) + ' (<span class="link">' + link + '</span>)');
+            // escaped.push(`<a class="link" href="${link}">${PdfService.escapeText(text)}</a>`);
+            escaped.push(PdfService.escapeText(text) + ' (<span class="link">' + link + '</span>)');
 
             index = match.index + match[0].length;
         }
@@ -483,4 +464,84 @@ export class PdfService {
             return HTML_ESCAPE_MAP[match];
         });
     }
+
+    private static newDocument(pdfData: PdfData) {
+        pdfData.jsPdf = new jsPDF("portrait", "mm", "a4");
+        pdfData.cursor = {x: PAGE_MARGIN.left, y: PAGE_MARGIN.top};
+    }
+
+    private static newPage(pdfData: PdfData, ifSpaceLessThan?: number) {
+        ifSpaceLessThan = ifSpaceLessThan || -1;
+        if (ifSpaceLessThan === -1 || pdfData.jsPdf.internal.pageSize.height - PAGE_MARGIN.top - PAGE_MARGIN.bottom - pdfData.cursor.x < ifSpaceLessThan) {
+            pdfData.jsPdf.addPage("a4", "portrait");
+            pdfData.cursor = {x: PAGE_MARGIN.left, y: PAGE_MARGIN.top};
+        }
+    }
+
+    private static addChapter(pdfData: PdfData, title: string) {
+        PdfService.newPage(pdfData, 20);
+        pdfData.lastChapter += 1;
+        pdfData.jsPdf.setFont('Roboto', 'bold');
+        pdfData.jsPdf.setFontSize(14);
+        pdfData.jsPdf.setTextColor(pdfData.options.colors && pdfData.options.colors.primary || "#006666");
+        const margin = {
+            top: 2,
+            bottom: 2
+        }
+        const lineHeight = pdfData.jsPdf.getLineHeight() / pdfData.jsPdf.internal.scaleFactor + margin.top + margin.bottom;
+        pdfData.jsPdf.text(
+            `${pdfData.lastChapter}. ${title}`,
+            pdfData.cursor.x,
+            pdfData.cursor.y + margin.top,
+            {
+                baseline: 'top',
+            });
+        pdfData.cursor.y += lineHeight;
+    }
+
+    private static addSection(pdfData: PdfData, sectionCount: number, title: string) {
+        PdfService.newPage(pdfData, 20);
+        pdfData.jsPdf.setFont('Roboto', 'normal');
+        pdfData.jsPdf.setFontSize(12);
+        pdfData.jsPdf.setTextColor(pdfData.options.colors && pdfData.options.colors.primary || "#006666");
+        const margin = {
+            top: 2,
+            bottom: 2
+        }
+        const lineHeight = pdfData.jsPdf.getLineHeight() / pdfData.jsPdf.internal.scaleFactor + margin.top + margin.bottom;
+        pdfData.jsPdf.text(
+            `${pdfData.lastChapter}.${sectionCount}. ${title}`,
+            pdfData.cursor.x,
+            pdfData.cursor.y + margin.top,
+            {
+                baseline: 'top',
+            });
+        pdfData.cursor.y += lineHeight;
+    }
+
+    private static addTable(pdfData: PdfData, head: RowInput[], body: RowInput[], marginTop?: number, marginBottom?: number, options?: UserOptions) {
+        const margin = {
+            top: PAGE_MARGIN.top + (marginTop || 0),
+            left: PAGE_MARGIN.left + 2,
+            bottom: marginBottom || 4,
+            right: PAGE_MARGIN.right + 2
+        }
+        const finalOptions = {...{
+                pageBreak: "avoid",
+                headStyles: {
+                    fillColor: pdfData.options.colors && pdfData.options.colors.primary || "#006666",
+                    textColor: "#FFF"
+                }
+            }, ...options, ...{
+                head: head,
+                body: body,
+                margin: margin,
+                startY: pdfData.cursor.y + (marginTop || 0),
+                didDrawPage: (data) => {
+                    pdfData.cursor.y = data.cursor.y + margin.bottom;
+                }
+            }};
+        autoTable(pdfData.jsPdf, finalOptions as UserOptions);
+    }
+
 }

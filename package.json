@@ -36,6 +36,7 @@
     "html2pdf.js": "^0.10.1",
     "ids": "latest",
     "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.25",
     "keycloak-angular": "^8.2.0",
     "keycloak-js": "^10.0.2",
     "moment": "^2.29.1",
