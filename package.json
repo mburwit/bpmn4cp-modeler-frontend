@@ -33,6 +33,7 @@
     "@whoicd/icd11ect": "^1.2.0",
     "bpmn4cp": "file:lib/bpmn4cp",
     "core-js": "^3.6.4",
+    "html2pdf.js": "^0.10.1",
     "ids": "latest",
     "jspdf": "^2.5.1",
     "keycloak-angular": "^8.2.0",

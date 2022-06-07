@@ -3,24 +3,37 @@ import {jsPDF} from "jspdf";
 import {PDFDocument} from "pdf-lib";
 import './fonts/ElementalEnd';
 import './fonts/Roboto';
+import * as html2pdf from "html2pdf.js";
 
-/*
-    A4 - portrait:
-        => 595.28 x 841.89 px
- */
-
+// mm
 const PAGE_MARGIN = {
-    left: 50,
-    right: 50,
-    top: 50,
-    bottom: 75
+    top: 20,
+    left: 20,
+    bottom: 20,
+    right: 20
 }
 
+// mm
 const HEADER = {
-    left: 30,
-    right: 30,
-    top: 5,
-    height: 30
+    top: 3,
+    left: 15,
+    right: 15,
+    height: 15
+}
+
+const a4scale = (pdfData) => {
+    return function (value) {
+        return value * pdfData.jsPdf.internal.pageSize.width / 210;
+    }
+}
+
+const metrics = {
+    pxToMm: function (px) {
+        return 0.2645833333 * px;
+    },
+    mmToPx: function (mm) {
+        return mm / 0.2645833333;
+    }
 }
 
 const HTML_ESCAPE_MAP = {
@@ -69,6 +82,7 @@ export class PdfService {
         })
             .then(PdfService.addA4ModelSvg)
             .then(PdfService.addStagesAndActors)
+            .then(PdfService.addQualityIndicators)
             .then(PdfService.addBibliography)
             .then(PdfService.addModelSvg)
             .then(PdfService.outputPdf);
@@ -89,20 +103,30 @@ export class PdfService {
         const pageCount = pdfData.jsPdf.internal.pages.length;
         for (let i = 1; i < pageCount; i++) {
             pdfData.jsPdf.setFont('Roboto', 'italic')
-            pdfData.jsPdf.setFontSize(8)
+            pdfData.jsPdf.setFontSize(10)
             pdfData.jsPdf.setPage(i);
-            pdfData.jsPdf.text(`Page ${i + pageOffset}`, pdfData.jsPdf.internal.pageSize.width - HEADER.right, HEADER.top + HEADER.height - 1, {
-                align: 'right',
-                baseline: 'bottom'
-            });
-            pdfData.jsPdf.text(`${pdfData.options.docName}`, HEADER.left, HEADER.top + HEADER.height - 1, {
-                align: 'left',
-                baseline: 'bottom',
-                maxWidth: (pdfData.jsPdf.internal.pageSize.width - HEADER.left - HEADER.right) * 0.75
-            });
-            pdfData.jsPdf.setLineWidth(0.5);
+            pdfData.jsPdf.text(`Page ${i + pageOffset}`,
+                pdfData.jsPdf.internal.pageSize.width - a4scale(pdfData)(HEADER.right),
+                a4scale(pdfData)(HEADER.top + HEADER.height - 1),
+                {
+                    align: 'right',
+                    baseline: 'bottom'
+                });
+            pdfData.jsPdf.text(`${pdfData.options.docName}`,
+                a4scale(pdfData)(HEADER.left),
+                a4scale(pdfData)(HEADER.top + HEADER.height - 1),
+                {
+                    align: 'left',
+                    baseline: 'bottom',
+                    maxWidth: (pdfData.jsPdf.internal.pageSize.width - a4scale(pdfData)(HEADER.left + HEADER.right)) * 0.75
+                });
+            pdfData.jsPdf.setLineWidth(0.25);
             pdfData.jsPdf.setDrawColor("#00000080");
-            pdfData.jsPdf.line(HEADER.left, HEADER.top + HEADER.height, pdfData.jsPdf.internal.pageSize.width - HEADER.right, HEADER.top + HEADER.height);
+            pdfData.jsPdf.line(
+                a4scale(pdfData)(HEADER.left),
+                a4scale(pdfData)(HEADER.top + HEADER.height),
+                pdfData.jsPdf.internal.pageSize.width - a4scale(pdfData)(HEADER.right),
+                a4scale(pdfData)(HEADER.top + HEADER.height));
         }
         return Promise.resolve(pdfData);
     }
@@ -110,7 +134,6 @@ export class PdfService {
     private static addA4ModelSvg(pdfData: PdfData) {
         return PdfService.addModelSvg(pdfData, true);
     }
-
 
     private static addModelSvg(pdfData: PdfData, fitPageSize?: boolean) {
         if (pdfData.options.modelSvg) {
@@ -121,18 +144,18 @@ export class PdfService {
             );
             const svgElement = svgContainer.firstElementChild;
             svgElement.getBoundingClientRect(); // force layout calculation
-            const originalWidth = svgElement["width"].baseVal.value;
-            const originalHeight = svgElement["height"].baseVal.value;
+            const originalWidth = metrics.pxToMm(svgElement["width"].baseVal.value);
+            const originalHeight = metrics.pxToMm(svgElement["height"].baseVal.value);
             let scaledWidth = originalWidth;
             let scaledHeight = originalHeight;
             if (fitPageSize) {
-                scaledWidth = (originalWidth > originalHeight ? 630 : 445) - PAGE_MARGIN.left - PAGE_MARGIN.right;
-                scaledHeight = (originalWidth > originalHeight ? 445 : 630) - PAGE_MARGIN.top - PAGE_MARGIN.bottom;
+                scaledWidth = (originalWidth > originalHeight ? 297 : 210) - PAGE_MARGIN.left - PAGE_MARGIN.right;
+                scaledHeight = (originalWidth > originalHeight ? 210 : 297) - PAGE_MARGIN.top - PAGE_MARGIN.bottom;
             }
             pdfData.jsPdf = new jsPDF(
                 originalWidth > originalHeight ? "landscape" : "portrait",
-                "px",
-                fitPageSize ? "a4": [
+                "mm",
+                fitPageSize ? "a4" : [
                     originalWidth + PAGE_MARGIN.left + PAGE_MARGIN.right,
                     originalHeight + PAGE_MARGIN.top + PAGE_MARGIN.bottom
                 ]);
@@ -153,7 +176,7 @@ export class PdfService {
     }
 
     private static addStagesAndActors(pdfData: PdfData) {
-        const tableRows = function(rowItems: IterableIterator<Item>) {
+        const tableRows = function (rowItems: IterableIterator<Item>) {
             let result = "";
             Array.from(rowItems).sort((a, b) => {
                 return (a.name < b.name ? -1 : (a.name > b.name ? 1 : 0));
@@ -179,20 +202,6 @@ export class PdfService {
                         "    </tr>";
                     html += tableRows(data.stages.values());
                     html += "  </table>";
-                    // data.stages.forEach((stage, id) => {
-                    //     html += `<h3>${stage.name}</h3>`;
-                    //     if (stage.items && stage.items.size > 0) {
-                    //         html += `  <p>Actors involved:`;
-                    //         html += `    <ul>`;
-                    //         stage.items.forEach(actor => {
-                    //             html += `      <li>${actor.name}</li>`;
-                    //         });
-                    //         html += `    </ul>`;
-                    //         html += `  </p>`;
-                    //     } else {
-                    //         html += `<p>No actors involved</p>`;
-                    //     }
-                    // });
                 }
                 if (data.actors.size > 0) {
                     html += `  <h2>${pdfData.lastChapter}.2 Actors</h2>`;
@@ -203,19 +212,38 @@ export class PdfService {
                         "    </tr>";
                     html += tableRows(data.actors.values());
                     html += "  </table>";
-                    // data.actors.forEach((actor, id) => {
-                    //     if (actor.items && actor.items.size > 0) {
-                    //         html += `<h3>${actor.name}</h3>`;
-                    //         html += `  <p>Involved in:`;
-                    //         html += `    <ul>`;
-                    //         actor.items.forEach(stage => {
-                    //             html += `      <li>${stage.name}</li>`;
-                    //         });
-                    //         html += `    </ul>`;
-                    //         html += `  </p>`;
-                    //     }
-                    // });
                 }
+                html += "</section>";
+                return PdfService.appendHtmlContainer(pdfData, html);
+            }
+        }
+        return Promise.resolve(pdfData);
+    }
+
+    private static addQualityIndicators(pdfData: PdfData) {
+        if (pdfData.options.bpmnXml) {
+            pdfData.options.bpmnXml = PdfService.parseXml(pdfData.options.bpmnXml);
+            const data = PdfService.loadQualityIndicators(pdfData.options.bpmnXml);
+            if (data.size > 0) {
+                pdfData.lastChapter += 1;
+                let html = "<section class='chapter'>";
+                html += `  <h1>${pdfData.lastChapter}. Quality Indicators</h1>`;
+                data.forEach((qi, qiId, map) => {
+                    html += "<div class='avoid-page-break'>"
+                    html += `  <h2>${pdfData.lastChapter}.${Array.from(map.values()).indexOf(qi) + 1} ${qi.name}</h2>`;
+                    html += "  <table>" +
+                        "    <tr class='header'>" +
+                        "      <th colspan='2'><div>Stage</div></th>" +
+                        "    </tr>";
+                    html += Object.keys(qi).map(qiProperty => {
+                        let row = "<tr>";
+                        row += `<td class="flex1"><div>${qiProperty.substring(0, 1).toUpperCase()}${qiProperty.substring(1)}</div></td>`;
+                        row += `<td class="flex4"><div>${qi[qiProperty]}</div></td></tr>`;
+                        return row;
+                    }).join("");
+                    html += "  </table>";
+                    html += "<div>"
+                });
                 html += "</section>";
                 return PdfService.appendHtmlContainer(pdfData, html);
             }
@@ -235,7 +263,7 @@ export class PdfService {
                 bibItems.forEach((bibItem) => {
                     html += `<div class="label">[${bibItem.refLabel}]</div><div>${bibItem.parsed}`;
                     if (bibItem.link) {
-                        html += ` (<span class="link">${bibItem.link}</span>)`;
+                        html += ` (<a class="link" href="${bibItem.link}">${bibItem.link}</a>)`;
                     }
                     html += "</div>";
                 });
@@ -246,17 +274,44 @@ export class PdfService {
         return Promise.resolve(pdfData);
     }
 
+    private static appendHtmlContainerAsImage(pdfData: PdfData, innerHtml: string) {
+        const containerDiv = document.createElement("div");
+        const divWidth = 210 - PAGE_MARGIN.left - PAGE_MARGIN.right;
+        containerDiv.setAttribute("style", `width: ${divWidth}mm; background-color: #fff;`);
+        containerDiv.setAttribute("class", `${document.body.getAttribute("class")} pdf`);
+        containerDiv.innerHTML = innerHtml;
+        const opt = {
+            margin: [PAGE_MARGIN.top, PAGE_MARGIN.left, PAGE_MARGIN.bottom, PAGE_MARGIN.right],
+            image: {type: 'jpg', quality: 0.1},
+            jsPDF: {unit: 'mm', format: 'a4', orientation: 'portrait'},
+            html2canvas: {
+                letterRendering: true,
+                scale: 0.95
+            },
+            pagebreak: {mode: ['avoid-all', 'css', 'legacy']}
+        };
+        return html2pdf().set(opt).from(containerDiv).toPdf().get("pdf")
+            .then((pdf) => {
+                //document.body.getElementsByClassName("cdk-overlay-container")[0].appendChild(containerDiv);
+                containerDiv.remove();
+                pdfData.jsPdf = pdf;
+                return pdfData;
+            }).then(PdfService.addHeaderAndFooter).then(PdfService.appendJsPdf);
+    }
+
     private static appendHtmlContainer(pdfData: PdfData, innerHtml: string) {
         const containerDiv = document.createElement("div");
-        const divWidth = 445 - PAGE_MARGIN.left - PAGE_MARGIN.right;
+        pdfData.jsPdf = new jsPDF("portrait", "px", "a4");
+        const scale = a4scale(pdfData);
+        const divWidth = scale(210 - PAGE_MARGIN.left - PAGE_MARGIN.right);
         containerDiv.setAttribute("style", `width: ${divWidth}px; background-color: #fff;`);
         containerDiv.setAttribute("class", `${document.body.getAttribute("class")} pdf`);
         containerDiv.innerHTML = innerHtml;
-        pdfData.jsPdf = new jsPDF("portrait", "px", "a4");
         return pdfData.jsPdf.html(containerDiv, {
             x: 0,
             y: 0,
-            margin: [PAGE_MARGIN.top, PAGE_MARGIN.right, PAGE_MARGIN.bottom, PAGE_MARGIN.left],
+            margin: [scale(PAGE_MARGIN.top), scale(PAGE_MARGIN.right), scale(PAGE_MARGIN.bottom), scale(PAGE_MARGIN.left)],
+            autoPaging: 'text',
             jsPDF: pdfData.jsPdf,
             width: divWidth
         }).then(() => {
@@ -320,6 +375,35 @@ export class PdfService {
         return result;
     }
 
+    private static loadQualityIndicators(xmlDoc: Document) {
+        const result: Map<string, any> = new Map();
+        if (xmlDoc) {
+            const qiElements = xmlDoc.getElementsByTagName("cp:qualityIndicator");
+            if (qiElements.length > 0) {
+                for (let i = 0; i < qiElements.length; i++) {
+                    const qiId = qiElements[i].getAttribute('id');
+                    const qiName = qiElements[i].getAttribute('bpmn2:name') === "" ?
+                        qiElements[i].getAttribute('id') : qiElements[i].getAttribute('bpmn2:name');
+                    const qiDomain = qiElements[i].getAttribute('domain') || "";
+                    const qiDocElement = qiElements[i].getElementsByTagName("bpmn2:documentation");
+                    const qiDocumentation = qiDocElement.length > 0 ? qiDocElement[0].innerHTML : "";
+                    const qiDefElement = qiElements[i].getElementsByTagName("cp:qIDefinition")[0] || undefined;
+                    const qi = {
+                        name: qiName,
+                        // domain: qiDomain,
+                        documentation: qiDocumentation,
+                        text: qiDefElement ? qiDefElement.getAttribute("text") : undefined,
+                        numerator: qiDefElement ? qiDefElement.getAttribute("numerator") : undefined,
+                        denumerator: qiDefElement ? qiDefElement.getAttribute("denumerator") : undefined
+                    };
+                    Object.keys(qi).forEach(key => (qi[key] === undefined || qi[key] === "" || qi[key] === null) && delete qi[key]);
+                    result.set(qiId, qi)
+                }
+            }
+        }
+        return result;
+    }
+
     private static loadBibliography(xmlDoc: Document) {
         const result = [];
         if (xmlDoc) {
@@ -363,8 +447,8 @@ export class PdfService {
             text = match[1] || match[4];
 
             // insert safe link
-            // escaped.push('<a href="' + link + '" target="_blank">' + PdfService.escapeText(text) + '</a>');
-            escaped.push(PdfService.escapeText(text) + ' (<span class="link">' + link + '</span>)');
+            escaped.push(`<a class="link" href="${link}">${PdfService.escapeText(text)}</a>`);
+            // escaped.push(PdfService.escapeText(text) + ' (<span class="link">' + link + '</span>)');
 
             index = match.index + match[0].length;
         }
@@ -395,7 +479,7 @@ export class PdfService {
 
     private static escapeHTML(str) {
         str = '' + str;
-        return str && str.replace(/[&<>"']/g, function(match) {
+        return str && str.replace(/[&<>"']/g, function (match) {
             return HTML_ESCAPE_MAP[match];
         });
     }
