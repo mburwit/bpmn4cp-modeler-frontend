@@ -4,8 +4,9 @@
   "scripts": {
     "ng": "node_modules/.bin/ng",
     "start": "node_modules/.bin/ng serve",
-    "prod": "node_modules/.bin/ng serve --configuration=production",
+    "start-prod": "node_modules/.bin/ng serve --configuration=production",
     "build": "node_modules/.bin/ng build",
+    "build-prod": "node_modules/.bin/ng build --configuration=production",
     "watch": "node_modules/.bin/ng build --watch --configuration development",
     "test": "node_modules/.bin/ng test",
     "postinstall": "ngcc"
