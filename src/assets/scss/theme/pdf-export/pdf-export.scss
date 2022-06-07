@@ -1,4 +1,6 @@
 @use 'sass:map';
+@use 'sizes.html2pdf' as html2pdf;
+@use 'sizes.jspdf' as jspdf;
 @use '~@angular/material' as mat;
 
 @mixin theme($theme) {
@@ -6,43 +8,17 @@
   $primary-palette: map.get($color-config, 'primary');
 
   .pdf {
-    font: 6px/8px "Roboto", sans-serif;
+    font-family: "Roboto", sans-serif;
     color: #000;
 
     h1, h2, h3 {
       font-family: "Roboto", sans-serif;
       font-weight: normal;
       color: mat.get-color-from-palette($primary-palette, 500);
-      margin: 6px 0 6px;
-    }
-
-    h1 {
-      font-size: 12px;
-      line-height: 16px;
-    }
-
-    h2 {
-      font-size: 10px;
-      line-height: 14px;
-    }
-
-    h3 {
-      font-size: 8px;
-      line-height: 12px;
-    }
-
-    p, ul, ol {
-      padding-bottom: 2px;
-    }
-
-    ul, ol {
-      padding-inline-start: 16px;
     }
 
     table {
       display: block;
-      margin: 0 8px;
-      padding-bottom: 6px;
     }
 
     tbody {
@@ -54,10 +30,9 @@
       display: inline-flex;
       min-width: 100%;
       background: inherit;
-      border-bottom: 0.5px solid #000;
+      border-bottom: solid #000;
 
       div {
-        min-height: 10px;
         display: flex;
         align-items: center;
         overflow: hidden;
@@ -67,7 +42,7 @@
 
     tr.header {
       color: mat.get-color-from-palette($primary-palette, 500);
-      border-bottom: 1px solid mat.get-color-from-palette($primary-palette, 500);
+      border-bottom: solid mat.get-color-from-palette($primary-palette, 500);
     }
 
     td, th {
@@ -91,31 +66,36 @@
       flex: 3
     }
 
-    td:first-of-type, th:first-of-type {
-      padding-left: 2px;
+    .flex4 {
+      flex: 4
     }
   }
 
   .bibliography {
-      display: block;
-      min-width: 100%;
+    display: block;
+    min-width: 100%;
 
-      div {
-        float: unset;
-        padding-bottom: 6px;
-        width: 95%;
-        word-wrap: break-word;
-      }
+    div {
+      float: unset;
+      width: 95%;
+      word-wrap: break-word;
+    }
 
-      .label {
-        float: left;
-        width: 5%;
-      }
+    .label {
+      float: left;
+      width: 5%;
+    }
 
-      a, .link {
-        font: 6px/8px "Courier";
-        color: mat.get-color-from-palette($primary-palette, 500);
-        cursor: pointer;
-      }
+    a, .link {
+      color: mat.get-color-from-palette($primary-palette, 500);
+      cursor: pointer;
+      text-decoration: none;
+    }
   }
+
+  .avoid-page-break {
+    break-inside: avoid;
+  }
+
+  @include jspdf.theme();
 }
