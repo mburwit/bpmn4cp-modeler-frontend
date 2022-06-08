@@ -56,8 +56,7 @@ export const environment = {
     bpmn2fhir: base(bpmn2fhir),
     auth: {
       enabled: JSON.parse(windowEnv["repositoryAuth"]),
-      username: windowEnv["repositoryAuthUser"],
-      password: windowEnv["repositoryAuthPassword"]
+      authorizationHeader: `Basic ${btoa(windowEnv["repositoryAuthUser"] + ':' + windowEnv["repositoryAuthPassword"])}`
     }
   }
 };

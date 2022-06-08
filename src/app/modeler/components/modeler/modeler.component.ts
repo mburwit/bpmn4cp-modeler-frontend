@@ -74,6 +74,14 @@ export class ModelerComponent implements OnInit, ComponentCanDeactivate {
           )
         };
       });
+    } else if (environment.config.auth.enabled === true) {
+        global.nativeGlobal.fhirApiRequestInit = {
+          headers: new Headers([
+                ["Authorization", environment.config.auth.authorizationHeader],
+                ["Accept", "application/json, text/plain, */*"]
+              ]
+          )
+        };
     } else {
       global.nativeGlobal.fhirApiRequestInit = {
         headers: new Headers([

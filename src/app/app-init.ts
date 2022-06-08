@@ -19,11 +19,9 @@ export class BasicAuthInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (environment.config.auth.enabled === true) {
-      const username = environment.config.auth.username;
-      const password = environment.config.auth.password;
       request = request.clone({
         setHeaders: {
-          Authorization: `Basic ${btoa(username + ':' + password)}`
+          Authorization: environment.config.auth.authorizationHeader
         }
       });
     }
