@@ -1,0 +1,53 @@
+<h1 *ngIf="isAddMode">Add CodeSystem</h1>
+<h1 *ngIf="!isAddMode">Edit CodeSystem</h1>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-row">
+        <div class="form-group col-12">
+            <label>Title</label>
+            <input type="text" formControlName="title" class="form-control"
+                   [ngClass]="{ 'is-invalid': submitted && f.title.errors }"/>
+            <div *ngIf="submitted && f.title.errors" class="invalid-feedback">
+                <div *ngIf="f.title.errors.required">Title is required</div>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-12">
+            <label>Description</label>
+            <input type="text" formControlName="description" class="form-control"
+                   [ngClass]="{ 'is-invalid': submitted && f.description.errors }"/>
+            <div *ngIf="f.description.errors" class="invalid-feedback">
+                <div *ngIf="f.description.errors.required">Description is required</div>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-12">
+            <label>URL</label>
+            <button type="button" mat-icon-button (click)="f.url.disabled ? f.url.enable() : f.url.disable()"
+                    aria-label="Toggle disability">
+                <fa-icon aria-hidden="true" [icon]="f.url.disabled ? iconEnable : iconDisable" [fixedWidth]="true"
+                         size="1x"></fa-icon>
+            </button>
+            <input type="text" formControlName="url" class="form-control"
+                   [ngClass]="{ 'is-invalid': submitted && (f.url.errors || form.errors?.url) }"/>
+            <div *ngIf="submitted && (f.url.errors || form.errors?.url)" class="invalid-feedback">
+                <div *ngIf="form.errors?.url.notUnique">CodeSystem with this URL already exists!</div>
+            </div>
+            <div *ngIf="f.url.enabled && !(submitted && (f.url.errors || form.errors?.url))" class="warning">
+                <div>Manually editing the url might affect selections in the modeler. Be sure what you're doing!</div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group" *ngIf="!editingConcepts">
+        <button [disabled]="loading" class="btn btn-primary">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            Save
+        </button>
+        <a routerLink="/terminology" class="btn btn-link">Cancel</a>
+    </div>
+</form>
+
+<div class="form-group">
+    <router-outlet></router-outlet>
+</div>

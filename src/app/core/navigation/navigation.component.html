@@ -5,6 +5,12 @@
       <span>Modeler</span>
     </a>
   </mat-list-item>
+  <mat-list-item class="navigation-item">
+    <a mat-line (click)="gotoTerminology()">
+      <fa-icon aria-hidden="true" mat-list-icon [icon]="icons['terminology']" [fixedWidth]="true"></fa-icon>
+      <span>Terminology</span>
+    </a>
+  </mat-list-item>
   <mat-list-item *ngIf="authEnabled()" class="navigation-item">
     <a mat-line (click)="logout()">
       <fa-icon aria-hidden="true" mat-list-icon [icon]="icons['logout']" [fixedWidth]="true"></fa-icon>

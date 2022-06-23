@@ -1,0 +1,43 @@
+<app-apply-terminology></app-apply-terminology>
+<h1>Code Systems</h1>
+<div class="form-row">
+    <div class="form-group col-4">
+        <input placeholder="Filter..." type="text" class="form-control" (input)="onFilterChange($event.target['value'])" />
+    </div>
+    <div class="form-group col-7">
+    </div>
+    <div class="form-group col-1">
+        <a routerLink="add" class="btn btn-sm btn-success mb-2">Add</a>
+    </div>
+</div>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th style="width: 23%">Name</th>
+        <th style="width: 23%">Description</th>
+        <th style="width: 23%">URL</th>
+        <th style="width: 23%"># Concepts</th>
+        <th style="width: 8%"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let codeSystem of filteredCodeSystems">
+        <td>{{codeSystem.title}}</td>
+        <td>{{codeSystem.description}}</td>
+        <td>{{codeSystem.url}}</td>
+        <td>{{codeSystem.concept && codeSystem.concept.length || 0}}</td>
+        <td style="white-space: nowrap">
+            <a routerLink="edit/{{codeSystem.id}}" class="btn btn-sm btn-primary mr-1">Edit</a>
+            <button (click)="deleteCodeSystem(codeSystem.id)" class="btn btn-sm btn-danger btn-delete-user" [disabled]="codeSystem.isDeleting">
+                <span *ngIf="codeSystem.isDeleting" class="spinner-border spinner-border-sm"></span>
+                <span *ngIf="!codeSystem.isDeleting">Delete</span>
+            </button>
+        </td>
+    </tr>
+    <tr *ngIf="!filteredCodeSystems">
+        <td colspan="4" class="text-center">
+            <span class="spinner-border spinner-border-lg align-center"></span>
+        </td>
+    </tr>
+    </tbody>
+</table>

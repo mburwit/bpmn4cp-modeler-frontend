@@ -1,0 +1,5 @@
+@import "https://netdna.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css";
+
+::ng-deep button:focus {
+  outline: unset;
+}

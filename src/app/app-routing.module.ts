@@ -25,6 +25,10 @@ const routes: Routes = [
       {
         path: "modeler",
         loadChildren: () => import("./modeler/modeler.module").then(m => m.ModelerModule)
+      },
+      {
+        path: "terminology",
+        loadChildren: () => import("./terminology/terminology.module").then(m => m.TerminologyModule)
       }
     ]
   },

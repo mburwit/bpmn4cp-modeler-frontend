@@ -50,6 +50,7 @@ export class TemplateService {
         this.allTemplates$.error(error);
       }
     );
+    return this.allTemplates;
   }
 
   createTemplate(template: Template): Observable<Template> {

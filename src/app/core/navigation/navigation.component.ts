@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewEncapsulation} from "@angular/core";
-import {faSignOutAlt, faTh, IconDefinition} from "@fortawesome/free-solid-svg-icons";
+import {faBook, faSignOutAlt, faTh, IconDefinition} from "@fortawesome/free-solid-svg-icons";
 import {KeycloakService} from "keycloak-angular";
 import {environment} from "../../../environments/environment";
 import {Router} from "@angular/router";
@@ -14,6 +14,7 @@ export class NavigationComponent implements OnInit {
 
   icons: { [name: string]: IconDefinition } = {
     templateGallery: faTh,
+    terminology: faBook,
     logout: faSignOutAlt
   };
   version: string;
@@ -37,6 +38,12 @@ export class NavigationComponent implements OnInit {
 
   gotoGallery() {
     this.router.navigate(["/gallery"]).then(() => {
+      window.location.reload();
+    });
+  }
+
+  gotoTerminology() {
+    this.router.navigate(["/terminology"]).then(() => {
       window.location.reload();
     });
   }

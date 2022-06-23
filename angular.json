@@ -48,7 +48,8 @@
               "svg2pdf.js",
               "raf",
               "core-js-pure",
-              "pako"
+              "pako",
+              "xpath-ts"
             ]
           },
           "configurations": {

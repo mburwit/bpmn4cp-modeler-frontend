@@ -1,0 +1,38 @@
+<h1>Concepts</h1>
+<div class="form-row">
+    <div class="form-group col-4">
+        <input placeholder="Filter..." type="text" class="form-control" (input)="onFilterChange($event.target['value'])" />
+    </div>
+    <div class="form-group col-7">
+    </div>
+    <div class="form-group col-1">
+        <a routerLink="add" class="btn btn-sm btn-success mb-2">Add</a>
+    </div>
+</div>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th style="width: 45%">Title</th>
+        <th style="width: 45%">Code</th>
+        <th style="width: 10%"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let concept of filteredConcepts">
+        <td>{{concept.display}}</td>
+        <td>{{concept.code}}</td>
+        <td style="white-space: nowrap">
+            <a routerLink="edit/{{concept.code}}" class="btn btn-sm btn-primary mr-1">Edit</a>
+            <button (click)="deleteConcept(concept.code)" class="btn btn-sm btn-danger btn-delete-user" [disabled]="concept.isDeleting">
+                <span *ngIf="concept.isDeleting" class="spinner-border spinner-border-sm"></span>
+                <span *ngIf="!concept.isDeleting">Delete</span>
+            </button>
+        </td>
+    </tr>
+    <tr *ngIf="!codeSystem || !filteredConcepts">
+        <td colspan="4" class="text-center">
+            <span class="spinner-border spinner-border-lg align-center"></span>
+        </td>
+    </tr>
+    </tbody>
+</table>

@@ -66,7 +66,7 @@ export class TemplateFormDialogComponent implements OnInit {
     result.svgBase64 = this.template.svgBase64;
     result.topic = this.topics;
     result.useContext = this.icdItems;
-    result.name = result.title ? result.title.toLowerCase().replace(/ /g, "-") : undefined;
+    result.name = result.title ? result.title.toLowerCase().replace(/ /g, "_") : undefined;
     Template.setIsSubTemplate(result, this.templateForm.value.isSubTemplate);
     return result;
   }

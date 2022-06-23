@@ -1,0 +1,28 @@
+<h1>Apply Terminology</h1>
+<p>
+    Code systems can be used to provide value sets for specific properties of elements in the modeler. Changes of the
+    code systems will be immediately selectable in the modeller, where the code system is used.
+    Changes of the code systems, esp. renaming code system concepts, will not automatically be applied to the content of
+    existing models, where code system concepts are used. But this can be triggered here.
+</p>
+<div class="alert alert-warning" role="alert">
+    Experimental feature! Use at your own risk! We recommend backing up the
+    models (export BPMNXML) before applying the terminology.
+</div>
+<!--<div class="form-row">-->
+<!--    <div class="form-group col-12">-->
+
+<!--    </div>-->
+<!--</div>-->
+<div class="form-row">
+    <div class="form-group col-3">
+        <button type="button" class="btn btn-sm btn-primary mb-2" (click)="apply()">Apply Terminology to Models</button>
+    </div>
+    <div class="form-group col-9">
+        <div class="progress" *ngIf="isApplying">
+            <div [class]="'progress-bar progress-bar-striped ' + progress.bgStyle" role="progressbar"
+                 [style]="progress.style" [attr.aria-valuenow]="progress.value" aria-valuemin="0"
+                 aria-valuemax="100">{{progress.label}}</div>
+        </div>
+    </div>
+</div>
