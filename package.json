@@ -6,7 +6,9 @@
     "start": "node_modules/.bin/ng serve",
     "start:prod": "npm run start -- --configuration production",
     "build": "node_modules/.bin/ng build",
-    "build:prod": "npm run build -- --configuration production --aot",
+    "pack": "cd target/bpmn4cp-modeler && tar -cvzf ../modeler-ui.tar.gz *",
+    "build:prod": "npm run build -- --configuration production --aot --base-href / --deploy-url /",
+    "build-pack:prod": "npm run build:prod && npm run pack",
     "watch": "npm run build -- --watch --configuration development",
     "test": "node_modules/.bin/ng test",
     "postinstall": "ngcc"
