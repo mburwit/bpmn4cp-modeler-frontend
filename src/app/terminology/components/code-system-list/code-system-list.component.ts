@@ -46,6 +46,6 @@ export class CodeSystemListComponent implements OnInit {
             .sort(this.sort);
     }
 
-    private sort = (a, b) => a.title.localeCompare(b.title);
+    private sort = (a, b) => Intl.Collator().compare(a.title, b.title);
 
 }

@@ -189,12 +189,10 @@ export class PdfService {
 
     private static addStagesAndActors(pdfData: PdfData) {
         const tableRows = function (rowItems: IterableIterator<Item>) {
-            return Array.from(rowItems).sort((a, b) => {
-                return (a.name < b.name ? -1 : (a.name > b.name ? 1 : 0));
-            }).map(rowItem =>
+            return Array.from(rowItems).sort((a, b) => Intl.Collator().compare(a.name, b.name)).map(rowItem =>
                 [
                     {content: rowItem.name, styles: {}},
-                    {content: Array.from(rowItem.items.values()).map(item => item.name).sort().join(", "), styles: {}}
+                    {content: Array.from(rowItem.items.values()).map(item => item.name).sort(Intl.Collator().compare).join(", "), styles: {}}
                 ]
             );
         }

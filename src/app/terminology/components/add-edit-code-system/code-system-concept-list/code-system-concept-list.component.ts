@@ -18,7 +18,7 @@ export class CodeSystemConceptListComponent implements OnInit {
     constructor(private codeSystemService: CodeSystemService) {
     }
 
-    private sort = (a, b) => a.display.localeCompare(b.display);
+    private sort = (a, b) => Intl.Collator().compare(a.display, b.display);
 
     ngOnInit(): void {
         this.codeSystemService.currentCodeSystem().subscribe(codeSystem => {
