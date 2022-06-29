@@ -260,48 +260,35 @@ export class PdfService {
     }
 
     private static addBibliography(pdfData: PdfData) {
+        const tableRows = function (rowItems: any[]) {
+            return rowItems.map(rowItem => {
+                let itemText = `${rowItem.parsed}`;
+                if (rowItem.link) {
+                    itemText += ` (${rowItem.link})`;
+                }
+                   return [
+                        {content: `\[${rowItem.refLabel}\]`, styles: {}},
+                        {content: itemText, styles: {}}
+                    ]
+                }
+            );
+        }
         if (pdfData.options.bpmnXml) {
             pdfData.options.bpmnXml = PdfService.parseXml(pdfData.options.bpmnXml);
             const bibItems = PdfService.loadBibliography(pdfData.options.bpmnXml);
             if (bibItems.length > 0) {
-                pdfData.lastChapter += 1;
-                let html = "<section class='chapter'>";
-                html += `  <h1>${pdfData.lastChapter}. References</h1>`;
-                html += `  <div class="bibliography">`;
-                bibItems.forEach((bibItem) => {
-                    html += `<div class="label">[${bibItem.refLabel}]</div><div>${bibItem.parsed}`;
-                    if (bibItem.link) {
-                        html += ` (<a class="link" href="${bibItem.link}">${bibItem.link}</a>)`;
-                    }
-                    html += "</div>";
-                });
-                html += "  </div>";
-                return PdfService.appendHtmlContainer(pdfData, html);
+                PdfService.newDocument(pdfData);
+                PdfService.addChapter(pdfData, `References`);
+                PdfService.addTable(
+                    pdfData,
+                    [],
+                    tableRows(bibItems), 0, 4,
+                    {theme: "plain"}
+                );
+                return Promise.resolve(pdfData).then(PdfService.addHeaderAndFooter).then(PdfService.appendJsPdf);
             }
         }
         return Promise.resolve(pdfData);
-    }
-
-    private static appendHtmlContainer(pdfData: PdfData, innerHtml: string) {
-        const containerDiv = document.createElement("div");
-        pdfData.jsPdf = new jsPDF("portrait", "px", "a4");
-        const scale = a4scale(pdfData);
-        const divWidth = scale(210 - PAGE_MARGIN.left - PAGE_MARGIN.right);
-        containerDiv.setAttribute("style", `width: ${divWidth}px; background-color: #fff;`);
-        containerDiv.setAttribute("class", `${document.body.getAttribute("class")} pdf`);
-        containerDiv.innerHTML = innerHtml;
-        return pdfData.jsPdf.html(containerDiv, {
-            x: 0,
-            y: 0,
-            margin: [scale(PAGE_MARGIN.top), scale(PAGE_MARGIN.right), scale(PAGE_MARGIN.bottom), scale(PAGE_MARGIN.left)],
-            autoPaging: 'text',
-            jsPDF: pdfData.jsPdf,
-            width: divWidth
-        }).then(() => {
-            //document.body.getElementsByClassName("cdk-overlay-container")[0].appendChild(containerDiv);
-            containerDiv.remove();
-            return pdfData;
-        }).then(PdfService.addHeaderAndFooter).then(PdfService.appendJsPdf);
     }
 
     private static outputPdf(pdfData: PdfData) {
@@ -429,7 +416,7 @@ export class PdfService {
 
             // insert safe link
             // escaped.push(`<a class="link" href="${link}">${PdfService.escapeText(text)}</a>`);
-            escaped.push(PdfService.escapeText(text) + ' (<span class="link">' + link + '</span>)');
+            escaped.push(PdfService.escapeText(text) + ' (' + link + ')');
 
             index = match.index + match[0].length;
         }
