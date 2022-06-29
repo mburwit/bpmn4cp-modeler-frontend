@@ -217,7 +217,7 @@ export class PdfService {
                     PdfService.addSection(pdfData, 2, `Actors`);
                     PdfService.addTable(
                         pdfData,
-                        [[{content: `Stage`}, {content: `Actors involved`}]],
+                        [[{content: `Actor`}, {content: `Stages involved`}]],
                         tableRows(data.actors.values())
                     );
                 }
