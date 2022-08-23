@@ -233,8 +233,9 @@ export class PdfService {
                 PdfService.newDocument(pdfData);
                 PdfService.addChapter(pdfData, `Quality Indicators`);
                 let counter = 0;
-                data.forEach(qi => {
+                Array.from(data.values()).sort((a, b) => parseInt(a.number) - parseInt(b.number) || Intl.Collator().compare(a.name, b.name)).forEach(qi => {
                     counter++;
+                    delete qi['number'];
                     PdfService.addTable(
                         pdfData,
                         [[{
@@ -350,12 +351,14 @@ export class PdfService {
             if (qiElements.length > 0) {
                 for (let i = 0; i < qiElements.length; i++) {
                     const qiId = qiElements[i].getAttribute('id');
+                    const qiNumber = qiElements[i].getAttribute('number') || 9999999;
                     const qiName = qiElements[i].getAttribute('bpmn2:name') === "" ?
                         qiElements[i].getAttribute('id') : qiElements[i].getAttribute('bpmn2:name');
                     const qiDocElement = qiElements[i].getElementsByTagName("bpmn2:documentation");
                     const qiDocumentation = qiDocElement.length > 0 ? qiDocElement[0].innerHTML : "";
                     const qiDefElement = qiElements[i].getElementsByTagName("cp:qIDefinition")[0] || undefined;
                     const qi = {
+                        number: qiNumber,
                         name: qiName,
                         documentation: qiDocumentation,
                         text: qiDefElement ? qiDefElement.getAttribute("text") : undefined,
